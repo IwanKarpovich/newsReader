@@ -1,0 +1,6 @@
+framework module Pods_newsReader {
+  umbrella header "Pods-newsReader-umbrella.h"
+
+  export *
+  module * { export * }
+}
