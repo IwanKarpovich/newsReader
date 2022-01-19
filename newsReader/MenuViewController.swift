@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MenuViewController: UIViewController, UITextFieldDelegate {
     
@@ -23,7 +24,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var wordSearch: String = ""
 
     
-    var typeSettings: [String] = ["top","category","country","marker"]
+    var typeSettings: [String] = ["top","category","country","marker","signout"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
 
@@ -126,6 +127,23 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
 
+            show(secondViewController, sender: nil)
+        }
+        
+        if typeSettings[indexPath.row] == "signout" {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+            do {
+            try Auth.auth().signOut()
+            } catch{
+                print(error)
+            }
+            
             show(secondViewController, sender: nil)
         }
         

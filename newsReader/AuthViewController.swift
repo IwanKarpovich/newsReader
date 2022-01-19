@@ -10,51 +10,101 @@
 // Swift override func viewDidLoad() { super.viewDidLoad() if let token = AccessToken.current, !token.isExpired { // User is logged in, do work such as go to next view controller. } }
 
 // Swift // // Дополните образец кода из раздела 6a. Добавление "Входа через Facebook" в код // Добавьте в метод viewDidLoad: loginButton.permissions = ["public_profile", "email"]
-    
+
 
 import UIKit
+import Firebase
+
 import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKCoreKit_Basics
 
 
-class AuthViewController: UIViewController {
+class AuthViewController: UIViewController, LoginButtonDelegate {
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        print("LogOut")
+    }
+    
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        if result!.isCancelled{
+            print("df")
+        }else{
+            if error == nil{
+                GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ?? HTTPMethod(rawValue: "GT")).start(completion: {
+                    (nil, result, error) in
+                    if error == nil{
+                        print(result)
+                        let credential = FacebookAuthProvider.credential(withAccessToken:
+                                                                            AccessToken.current!.tokenString)
+                        Auth.auth().signIn(with: credential, completion: {(result, error) in
+                            if error == nil {
+                                print(result?.user.uid)
+                            }
+                        })
 
+                        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "newsMenu")
+                        self.present(viewController!, animated: true)
+                        
+                    }
+                })
+            }
+
+           
+
+        }
+        
+    }
+    
+    
+    
     @IBOutlet weak var nameTextField: UITextField!
     
     @IBOutlet weak var enterbutton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        let loginButton = FBLoginButton()
-        loginButton.center = view.center
-        view.addSubview(loginButton)
-        loginButton.permissions = ["public_profile", "email"]
-    
-        if let token = AccessToken.current, !token.isExpired {
-//            let viewController = storyboard?.instantiateViewController(withIdentifier: "newsMenu")
-//            self.present(viewController!, animated: true)
-            let credential = FacebookAuthProvider
-              .credential(withAccessToken: AccessToken.current!.tokenString)
-            
-            
-        }
+        let buttonFD = FBLoginButton()
+        buttonFD.delegate = self
+        buttonFD.permissions = ["public_profile", "email"]
+        buttonFD.frame.origin.y = 500
+        buttonFD.frame.origin.x = 100
+        self.view.addSubview(buttonFD)
         
-//        let buttonFB = FBLoginButton()
-//        buttonFB.delegate = self
-//        buttonFB.read
+        //        let loginButton = FBLoginButton()
+        //        loginButton.center = view.center
+        //        view.addSubview(loginButton)
+        //        loginButton.permissions = ["public_profile", "email"]
+        //
+        //        if let token = AccessToken.current, !token.isExpired {
+        ////            let viewController = storyboard?.instantiateViewController(withIdentifier: "newsMenu")
+        ////            self.present(viewController!, animated: true)
+        //            let credential = FacebookAuthProvider
+        //              .credential(withAccessToken: AccessToken.current!.tokenString)
+        //            Auth.auth().signIn(with: credential, completion: {(result, error) in
+        //                if error == nil {
+        //                    print(result?.user.uid)
+        //                }
+        //            })
+        //
+        //
+        //        }
+        
+        //        let buttonFB = FBLoginButton()
+        //        buttonFB.delegate = self
+        //        buttonFB.read
         
         // Do any additional setup after loading the view.
+                
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

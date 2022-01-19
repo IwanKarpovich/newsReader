@@ -7,6 +7,7 @@
 
 import UIKit
 import Network
+import Firebase
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var timer: Timer?
@@ -30,12 +31,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     override func viewDidLoad() {
+//        Auth.auth().addStateDidChangeListener{(auth, user) in
+//            print("In FUNC")
+//            print(user)
+//            if user == nil{
+//                print("not error")
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
+//                
+//                self.show(secondViewController, sender: nil)
+//                //self.showModalAuth()
+//            }}
+        // self.navigationController!.navigationBar.isHidden = true
+        
         super.viewDidLoad()
         if searchByCountry == ""{
             let locale: NSLocale = NSLocale.current as NSLocale
-            let country: String? = locale.countryCode
+            var country: String? = locale.countryCode
             print(country ?? "no country")
+            if country == "BY" {
+                country = "RU"
+            }
             searchByCountry = country!
+            
         }
         if wordSearch == "" {
             wordSearch = "none"
@@ -248,9 +266,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             cell.desc.text = self.articles?[indexPath.item].desc
             cell.author.text = self.articles?[indexPath.item].author
-            print("Image")
+            //            print("Image")
             if let imageURL = self.articles?[indexPath.item].imageUrl {
-                cell.imgView.downloadImage(from: (imageURL) as! String)
+                cell.imgView.downloadImage(from: (imageURL) as String)
             }
             
             return cell
@@ -261,7 +279,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             if cell == nil {
                 cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-                print("create")
+                //                print("create")
             }
             
             
@@ -283,7 +301,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.tableView.performBatchUpdates({
                 
                 let selectedArticleUrl = articles![indexPath.row].url
-               let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
+                let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
                 if let articleIndex = articleIndex
                 {
                     markerArticles?.remove(at: articleIndex)
@@ -301,15 +319,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
         if let articleIndex = articleIndex {
             swipeMarker.image = UIImage(systemName: "star.fill")
-
-
+            
+            
         }
         else{
             swipeMarker.image = UIImage(systemName: "star")
-
+            
         }
         swipeMarker.backgroundColor = UIColor.systemBlue
-
+        
         
         let configure = UISwipeActionsConfiguration(actions: [swipeMarker])
         configure.performsFirstActionWithFullSwipe = false
@@ -411,8 +429,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 
 extension UIImageView{
-    func downloadImage(from url:String){
-        let urlRequest = URLRequest(url: URL(string: url)!)
+    func downloadImage(from url:String = "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png"){
+        let const = URL(string: url)
+        let urlRequest = URLRequest(url: const ?? URL(string: "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png")! )
         
         let task = URLSession.shared.dataTask(with: urlRequest){ (data, response, error) in
             if error != nil {
