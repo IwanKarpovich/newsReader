@@ -17,6 +17,7 @@ class MarkerViewController: UIViewController {
     var wordSearch: String = ""
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
+    var sourcesName: String = ""
 
     
     @IBOutlet weak var tableView: UITableView!
@@ -41,6 +42,8 @@ class MarkerViewController: UIViewController {
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
+        secondViewController.sourcesName = sourcesName
+
        
 
         

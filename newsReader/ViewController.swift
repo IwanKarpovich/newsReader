@@ -12,13 +12,16 @@ import Firebase
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var timer: Timer?
     
-    
+    var nameUsers = ""
     var name = "offline"
     var typeOfFunc = "top"
     var categoryName: String = "none"
     var searchByCountry: String = ""
     var wordSearch: String = "none"
     var selectedArticle: Article?
+    var handle: AuthStateDidChangeListenerHandle?
+    var sourcesName: String = "none"
+
     
     
     @IBOutlet weak var newsReaderLabel: UINavigationBar!
@@ -29,22 +32,93 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var markerArticles: [Article]? = []
     var didSelectedArticle: Article?
     
+    override func viewWillDisappear( _ animated: Bool){
+        super.viewWillDisappear(animated)
+        if let handle = handle{
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
+        
+    }
     
-    override func viewDidLoad() {
-//        Auth.auth().addStateDidChangeListener{(auth, user) in
-//            print("In FUNC")
-//            print(user)
-//            if user == nil{
-//                print("not error")
-//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
-//                
-//                self.show(secondViewController, sender: nil)
-//                //self.showModalAuth()
-//            }}
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if Core.shared.isNewUser(){
+            let vc = storyboard?.instantiateViewController(identifier: "welcome") as! WelcomeViewController
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true)
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            guard let secondViewController = storyboard.instantiateViewController(identifier: "welcome") as? WelcomeViewController else { return }
+//            self.show(secondViewController, sender: nil)
+        }
+    }
+    
+    override func viewWillAppear( _ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+
+        
+        handle = Auth.auth().addStateDidChangeListener{ [self](auth, user) in
+            print("In FUNC")
+            print(user)
+            
+            if user == nil{
+                print("not error")
+                goToAuthefication()
+                //                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                //                guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
+                //
+                //                self.show(secondViewController, sender: nil)
+                
+                //self.showModalAuth()
+            }
+            else  {
+                self.nameUsers = (user?.email)!
+                print(nameUsers)
+                Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
+                    AnalyticsParameterItemID: "id-\(nameUsers)",
+                  AnalyticsParameterItemName: nameUsers,
+                  AnalyticsParameterContentType: "cont",
+                ])
+                Analytics.setUserProperty(nameUsers, forName: "name users - ")
+                Analytics.setUserID(nameUsers)
+
+                if markerArticles!.count == 0 {
+                    let db = Firestore.firestore()
+                    
+                    // let docRef = db.collection("users").document(nameUsers).collection("markers").document("marker\(selectedArticleHeadline)")
+                    db.collection("users").document(nameUsers).collection("markers").getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                print("\(document.documentID) => \(document.data())")
+                                let headline = document.get("headline") as! String
+                                let desc = document.get("desc") as! String
+                                let author = document.get("author") as? String
+                                let url = document.get("url") as! String
+                                let imageUrl = document.get("imageUrl") as! String
+                                let marker = document.get("marker") as! Bool
+                                let article = Article()
+                                article.author = author
+                                article.desc = desc
+                                article.headline = headline
+                                article.url = url
+                                article.imageUrl = imageUrl
+                                self.markerArticles?.append(article)
+                            }
+                        }
+                    }
+                    
+                    
+                }
+                
+            }
+            
+            
+            
+        }
         // self.navigationController!.navigationBar.isHidden = true
         
-        super.viewDidLoad()
         if searchByCountry == ""{
             let locale: NSLocale = NSLocale.current as NSLocale
             var country: String? = locale.countryCode
@@ -58,7 +132,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if wordSearch == "" {
             wordSearch = "none"
         }
-        settingsTableArray = [typeOfFunc, categoryName , searchByCountry, wordSearch]
+        settingsTableArray = [typeOfFunc, categoryName , searchByCountry, wordSearch,sourcesName]
         print(settingsTableArray)
         settingsTableArray = settingsTableArray.filter(){$0 != "none"}
         print(settingsTableArray)
@@ -68,21 +142,47 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         
-        
-        
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
+        
+        
+        
         print(typeOfFunc)
         testFunc(rilo: "ruka")
+        print(sourcesName)
         if name == "offline" {
             testFunc1()
         }
         else{
             
-            fetchArticles(type: typeOfFunc,category: categoryName,country: searchByCountry,search: wordSearch)
+            fetchArticles(type: typeOfFunc,category: categoryName,country: searchByCountry,search: wordSearch, source: sourcesName)
         }
         print(name)
         print(categoryName)
         monitNetwork()
+        
+        
+    }
+    
+    //    func Authefication() -> String {
+    //        Auth.auth().addStateDidChangeListener{ [self](auth, user) in
+    //            print("In FUNC")
+    //            if user != nil{
+    //            return user as String
+    //            }
+    //            else{
+    //              return nil
+    //            }
+    //       }
+    //    }
+    
+    func goToAuthefication() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
+        
+        self.show(secondViewController, sender: nil)
+        
+        //        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "auth")
+        //        self.present(viewController!, animated: true)
     }
     
     func monitNetwork() {
@@ -121,6 +221,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func menuButton(_ sender: Any) {
         print("aer")
+        print(markerArticles)
+        let db = Firestore.firestore()
+        
+        
         //        let viewController = storyboard?.instantiateViewController(withIdentifier: "menu")
         //        self.present(viewController!, animated: true)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -132,6 +236,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
+        secondViewController.sourcesName = sourcesName
+
+        print("dsfsf")
+        
         
         
         show(secondViewController, sender: nil)
@@ -142,10 +250,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         print(rilo)
     }
     
-    func fetchArticles(type: String, category: String,country: String,search: String){
+    func fetchArticles(type: String, category: String,country: String,search: String,source: String){
         var urlstring: String = ""
         var newcategoryName = ""
         var newSearchName = ""
+        var newSourceName = ""
+        var newCountry = ""
         print(category)
         if category == "none"{
             newcategoryName = ""//"business"
@@ -154,6 +264,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             newcategoryName = "&"+"category=" + category
         }
         
+        
+        
+        
         if search == "none"{
             newSearchName = ""//"business"
         }
@@ -161,10 +274,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             newSearchName = "q=" + search + "&"
         }
         
+        if source == "none"{
+            newSourceName = ""//"business"
+        }
+        else{
+            newSourceName = ""+"sources=" + source
+        }
+        
+        if country == "none"{
+            newCountry = ""//"business"
+        }
+        else{
+            newCountry = "country=" + country
+        }
+        
+        
         print(newcategoryName)
         if type == "top" {
             //country=us&
-            var lastCategoryName = "country="+country+newcategoryName
+            var lastCategoryName = newCountry+newcategoryName+newSourceName
             
             urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "&apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
@@ -173,12 +301,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         else{
             //var lastCategoryName = "category=" + newcategoryName
             if newSearchName == "" {
-                newSearchName = "bitcoin" + "&"
+                newSearchName = "q=bitcoin" + "&"
             }
-            urlstring = "https://newsapi.org/v2/everything?q=" + newSearchName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
         }
         print(urlstring)
+        
+        
+        
         let urlRequest =  URLRequest(url: URL(string: urlstring
                                               
                                               
@@ -300,15 +431,72 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             (action, view ,success) in
             self.tableView.performBatchUpdates({
                 
-                let selectedArticleUrl = articles![indexPath.row].url
-                let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
+                let selectedArticleHeadline = articles![indexPath.row].headline
+                let db = Firestore.firestore()
+                let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+                //                Firestore.firestore().collection("users")
+                //                            .document(nameUsers)
+                //                            .getDocument { (document, error) in
+                //                                debugPrint(document?.exists)
+                //                                if document?.exists ?? false {
+                //
+                //                                } else {
+                //                                    washingtonRef.setData(["headline":[]])
+                //                                }
+                //                            }
+                
+                let articleIndex = (markerArticles?.firstIndex(where: { $0.headline == selectedArticleHeadline }))
                 if let articleIndex = articleIndex
                 {
+                    washingtonRef.document("marker\(selectedArticleHeadline)").delete()
+                    //                    washingtonRef.setData([
+                    //                        "headline": FieldValue.arrayRemove([markerArticles![articleIndex].headline]),
+                    //                        "desc": FieldValue.arrayRemove([markerArticles![articleIndex].desc]),
+                    //                        "author": FieldValue.arrayRemove([markerArticles![articleIndex].author]),
+                    //                        "url": FieldValue.arrayRemove([markerArticles![articleIndex].url]),
+                    //                        "imageUrl": FieldValue.arrayRemove([markerArticles![articleIndex].imageUrl]),
+                    //                        "marker": FieldValue.arrayRemove([markerArticles![articleIndex].marker])
+                    //
+                    //                    ])
                     markerArticles?.remove(at: articleIndex)
+                
+                    
+                    
                 }
                 else{
                     self.markerArticles?.append(self.articles![indexPath.row])
+                    //                    washingtonRef.updateData([
+                    //                        "headline": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].headline]),
+                    //                        "desc": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].desc]),
+                    //                        "author": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].author]),
+                    //                        "url": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].url]),
+                    //                        "imageUrl": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].imageUrl]),
+                    //                        "marker": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].marker])
+                    //
+                    //                    ])
+                    washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline)").setData([
+                        "headline":markerArticles![markerArticles!.count - 1].headline, //FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].headline]),
+                        "desc": markerArticles![markerArticles!.count - 1].desc,//FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].desc]),
+                        "author": markerArticles![markerArticles!.count - 1].author,//FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].author]),
+                        "url": markerArticles![markerArticles!.count - 1].url,//FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].url]),
+                        "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl,//FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].imageUrl]),
+                        "marker": markerArticles![markerArticles!.count - 1].marker//FieldValue.arrayRemove([markerArticles![markerArticles!.count - 1].marker])
+                        
+                    ])
+                    
+                    
+                    
                 }
+                //        let docRef = db.collection("users").document(nameUsers)
+                
+                //                docRef.getDocument { (document, error) in
+                //                    if let document = document, document.exists {
+                //                        let dataDescription = document.get("regions") as! [String] //document.data().map(String.init(describing:)) ?? "nil"
+                //                        print("Document data: \(dataDescription)")
+                //                    } else {
+                //                        print("Document does not exist")
+                //                    }
+                //                }
                 print(markerArticles)
                 print("delete")
                 
@@ -331,6 +519,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let configure = UISwipeActionsConfiguration(actions: [swipeMarker])
         configure.performsFirstActionWithFullSwipe = false
+        
+        //        db.collection("users").document("marker").addDocument(data: [
+        //            "headline": self.articles![indexPath.row].headline ,
+        //            "desc": self.articles![indexPath.row].desc
+        //
+        //        ])
+        
+        
         return configure
     }
     
@@ -350,6 +546,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             secondViewController.wordSearch = wordSearch
             secondViewController.selectedArticle = selectedArticle
             secondViewController.markerArticles = markerArticles
+            secondViewController.nameUsers = nameUsers
+            secondViewController.sourcesName = sourcesName
+
+       
+
             //   secondViewController.articles = articles
             
             //   secondViewController.wordSearch = articles
@@ -443,6 +644,18 @@ extension UIImageView{
             }
         }
         task.resume()
+    }
+}
+
+class Core {
+    
+    static let shared = Core()
+    
+    func isNewUser() -> Bool {
+        return !UserDefaults.standard.bool(forKey: "isNewUser")
+    }
+    func setIsNotNewUse(){
+        UserDefaults.standard.set(true, forKey: "isNewUser")
     }
 }
 

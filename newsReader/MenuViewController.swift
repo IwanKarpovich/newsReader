@@ -22,9 +22,11 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var searchByCountry: String = ""
     var categoryName: String = ""
     var wordSearch: String = ""
+    var sourcesName: String = ""
+
 
     
-    var typeSettings: [String] = ["top","category","country","marker","signout"]
+    var typeSettings: [String] = ["top","category","country","marker","sources","signout"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
 
@@ -63,6 +65,10 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             secondViewController.typeOfFunc = typeOfFunc
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.markerArticles = markerArticles
+            secondViewController.sourcesName = sourcesName
+
+
 
             show(secondViewController, sender: nil)
         }
@@ -81,6 +87,8 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
+        secondViewController.sourcesName = sourcesName
+
 
         show(secondViewController, sender: nil)
         
@@ -102,6 +110,8 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.searchByCountry = searchByCountry
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.sourcesName = sourcesName
+
             
             show(secondViewController, sender: nil)
         }
@@ -113,6 +123,9 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.searchByCountry = searchByCountry
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.sourcesName = sourcesName
+
+            
             
             show(secondViewController, sender: nil)
         }
@@ -126,25 +139,48 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
+            secondViewController.sourcesName = sourcesName
+
+            
+
+            show(secondViewController, sender: nil)
+        }
+        
+        if typeSettings[indexPath.row] == "sources" {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "sources") as? SourcesViewController else { return }
+            secondViewController.name = name
+            secondViewController.typeOfFunc = typeOfFunc
+            secondViewController.searchByCountry = searchByCountry
+            secondViewController.categoryName = categoryName
+            secondViewController.wordSearch = wordSearch
+            secondViewController.sourcesName = sourcesName
 
             show(secondViewController, sender: nil)
         }
         
         if typeSettings[indexPath.row] == "signout" {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
 //            secondViewController.name = name
 //            secondViewController.typeOfFunc = typeOfFunc
 //            secondViewController.searchByCountry = searchByCountry
 //            secondViewController.categoryName = categoryName
 //            secondViewController.wordSearch = wordSearch
+            
             do {
-            try Auth.auth().signOut()
+             try Auth.auth().signOut()
+  
             } catch{
                 print(error)
             }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+
+            self.show(secondViewController, sender: nil)
             
-            show(secondViewController, sender: nil)
+            
+//            show(secondViewController, sender: nil)
         }
         
     }
@@ -199,10 +235,15 @@ extension MenuViewController: UITableViewDataSource {
         else{
             secondViewController.typeOfFunc = "none"
         }
+
         secondViewController.name = name
-        secondViewController.searchByCountry = searchByCountry
+     
         secondViewController.categoryName = categoryName
+        secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch
+        secondViewController.markerArticles = markerArticles
+        secondViewController.sourcesName = sourcesName
+        
         
         show(secondViewController, sender: nil)
     }

@@ -26,9 +26,16 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
     }
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        if result!.isCancelled{
-            print("df")
-        }else{
+        if result!.isCancelled == false{
+//            let firebaseAuth = Auth.auth()
+//        do {
+//          try firebaseAuth.signOut()
+//        } catch let signOutError as NSError {
+//          print("Error signing out: %@", signOutError)
+//        }
+//            print("df")
+//
+//        }else{
             if error == nil{
                 GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ?? HTTPMethod(rawValue: "GT")).start(completion: {
                     (nil, result, error) in
@@ -37,13 +44,23 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                         let credential = FacebookAuthProvider.credential(withAccessToken:
                                                                             AccessToken.current!.tokenString)
                         Auth.auth().signIn(with: credential, completion: {(result, error) in
+                            var nameUsers: String = ""
                             if error == nil {
                                 print(result?.user.uid)
+                                nameUsers = (result?.user.email)!
+                               
                             }
+                            
+                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                            
+                            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+                            secondViewController.nameUsers = nameUsers
+
+
+                            self.show(secondViewController, sender: nil)
                         })
 
-                        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "newsMenu")
-                        self.present(viewController!, animated: true)
+
                         
                     }
                 })
@@ -68,6 +85,8 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
         buttonFD.frame.origin.y = 500
         buttonFD.frame.origin.x = 100
         self.view.addSubview(buttonFD)
+        
+        
         
         //        let loginButton = FBLoginButton()
         //        loginButton.center = view.center
@@ -96,6 +115,53 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                 
     }
     
+    @IBAction func facebookAction(_ sender: Any) {
+        let login = LoginManager()
+        login.logIn(permissions: [ "email","public_profile"], from: self) {(result, error) in
+            if result!.isCancelled == false{
+    //            let firebaseAuth = Auth.auth()
+    //        do {
+    //          try firebaseAuth.signOut()
+    //        } catch let signOutError as NSError {
+    //          print("Error signing out: %@", signOutError)
+    //        }
+    //            print("df")
+    //
+    //        }else{
+                if error == nil{
+                    GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ?? HTTPMethod(rawValue: "GT")).start(completion: {
+                        (nil, result, error) in
+                        if error == nil{
+                            print(result)
+                            let credential = FacebookAuthProvider.credential(withAccessToken:
+                                                                                AccessToken.current!.tokenString)
+                            Auth.auth().signIn(with: credential, completion: {(result, error) in
+                                var nameUsers: String = ""
+                                if error == nil {
+                                    print(result?.user.uid)
+                                    nameUsers = (result?.user.email)!
+                                   
+                                }
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                
+                                guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+                                secondViewController.nameUsers = nameUsers
+
+
+                                self.show(secondViewController, sender: nil)
+                            })
+
+
+                            
+                        }
+                    })
+                }
+
+               
+
+            }
+        }
+    }
     
     /*
      // MARK: - Navigation
@@ -108,3 +174,4 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
      */
     
 }
+

@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import Firebase
 
 class WebViewController: UIViewController {
     
@@ -20,6 +21,8 @@ class WebViewController: UIViewController {
     var wordSearch: String = ""
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
+    var nameUsers: String = ""
+    var sourcesName: String = ""
 
 
     var test: Bool = true
@@ -35,6 +38,9 @@ class WebViewController: UIViewController {
     var url: String?
     override func viewDidLoad() {
         super.viewDidLoad()
+        Analytics.logEvent(AnalyticsEventScreenView,
+                           parameters: [AnalyticsParameterScreenName: selectedArticle!.url,
+                                        AnalyticsParameterScreenClass: selectedArticle!.url])
         print(name)
         webview.load(URLRequest(url: URL(string:url!)!))
         let selectedArticleUrl = selectedArticle!.url
@@ -63,17 +69,36 @@ class WebViewController: UIViewController {
         markerButton.isSelected.toggle()
         markerButton.setImage(UIImage(systemName: "star"), for: .normal)
         markerButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        let db = Firestore.firestore()
+        let washingtonRef = db.collection("users").document(nameUsers)
         if markerButton.isSelected == false {
             let selectedArticleUrl = selectedArticle!.url
            let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
             if let articleIndex = articleIndex
             {
+                washingtonRef.updateData([
+                    "headline": FieldValue.arrayRemove([markerArticles![articleIndex].headline]),
+                    "desc": FieldValue.arrayRemove([markerArticles![articleIndex].desc]),
+                    "author": FieldValue.arrayRemove([markerArticles![articleIndex].author]),
+                    "url": FieldValue.arrayRemove([markerArticles![articleIndex].url]),
+                    "imageUrl": FieldValue.arrayRemove([markerArticles![articleIndex].imageUrl]),
+                    "marker": FieldValue.arrayRemove([markerArticles![articleIndex].marker])
+                    
+                ])
                 markerArticles?.remove(at: articleIndex)
             }
          }
         if markerButton.isSelected == true {
             print("print true")
             self.markerArticles?.append(self.selectedArticle!)
+            washingtonRef.updateData([
+                "headline": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].headline]),
+                "desc": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].desc]),
+                "author": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].author]),
+                "url": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].url]),
+                "imageUrl": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].imageUrl]),
+                "marker": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].marker])
+            ])
 
         }
 
@@ -96,6 +121,8 @@ class WebViewController: UIViewController {
         secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
+        secondViewController.sourcesName = sourcesName
+
 
    //     secondViewController.articles = articles
 

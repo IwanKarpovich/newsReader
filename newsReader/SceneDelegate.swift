@@ -7,11 +7,16 @@
 
 import UIKit
 import FBSDKCoreKit
+import Firebase
 
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+//    var auth: UIViewController = AuthViewController()
+//    var unput: UIViewController = ViewController()
+
+
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else {
@@ -30,8 +35,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let newvc = storyboard.instantiateViewController(withIdentifier: "auth") as! AuthViewController
+//
+       guard let _ = (scene as? UIWindowScene) else { return }
+//        let rootVC = self.window?.rootViewController
+//        rootVC?.present(newvc,animated: true , completion: nil)
+//        guard let windowScene = (scene as? UIWindowScene) else { return }
+//
+//        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//
+//        window?.windowScene = windowScene
+//       var handle = Auth.auth().addStateDidChangeListener({ auth, user in
+//            if (user != nil) {
+//                self.window!.rootViewController = self.unput
+//            }
+//            else {
+//                self.window!.rootViewController = self.auth
+//            }
+//        })
+//
+//        window?.makeKeyAndVisible()
         
-        guard let _ = (scene as? UIWindowScene) else { return }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

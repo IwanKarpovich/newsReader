@@ -15,6 +15,8 @@ class CatogoryViewController: UIViewController {
     var name: String = ""
     var searchByCountry: String = ""
     var wordSearch: String = ""
+    var sourcesName: String = ""
+
 
 
     var categoryArray: [String] = ["business","entertainment", "general","health","science","sports","technology","none"]
