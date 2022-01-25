@@ -20,6 +20,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var categoryName: String = ""
     var wordSearch: String = ""
     var sourcesName: String = ""
+    var nameUsers: String = ""
     
     var typeSettings: [String] = ["top","category","country","marker","sources","signout"]
     var settingsTableArray: [String] = []
@@ -113,6 +114,8 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
+            secondViewController.nameUsers = nameUsers
+
             show(secondViewController, sender: nil)
         }
         

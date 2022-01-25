@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         sendNotifications(identifier: "numberTwo", title: "News Reader",body: "GO check evening new NEWS !!!!!",hour: 19,minute: 0)
         
         FirebaseApp.configure()
-        var title = ""
+        let title = ""
         Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
             AnalyticsParameterItemID: "id-\(title)",
             AnalyticsParameterItemName: title,
@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         notificationCenter.add(request) {(error) in
-            print(error?.localizedDescription)
+            print(error?.localizedDescription as Any)
         }
     }
     
@@ -101,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate{
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound])
+        completionHandler([.list,.banner, .sound])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

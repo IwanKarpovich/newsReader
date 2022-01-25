@@ -17,4 +17,8 @@ class Article : NSObject{
     
 }
 
+class ArticlesState {
+    var article:[Article] = []
+    
+}
 

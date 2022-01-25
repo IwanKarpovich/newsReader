@@ -20,7 +20,7 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
         if result!.isCancelled == false{
             if error == nil{
-                GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ?? HTTPMethod(rawValue: "GT")).start(completion: {
+                GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ).start(completion: {
                     (nil, result, error) in
                     if error == nil{
                         let credential = FacebookAuthProvider.credential(withAccessToken:
@@ -70,7 +70,7 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
             if result!.isCancelled == false{
                 
                 if error == nil{
-                    GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ?? HTTPMethod(rawValue: "GT")).start(completion: {
+                    GraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: AccessToken.current?.tokenString, version: nil, httpMethod: HTTPMethod(rawValue: "GET") ).start(completion: {
                         (nil, result, error) in
                         if error == nil{
                             let credential = FacebookAuthProvider.credential(withAccessToken:

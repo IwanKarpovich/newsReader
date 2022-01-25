@@ -49,6 +49,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    fileprivate func addArticleToMarkersList(_ querySnapshot: QuerySnapshot?) {
+        for document in querySnapshot!.documents {
+            let headline = document.get("headline") as! String
+            let desc = document.get("desc") as! String
+            let author = document.get("author") as? String
+            let url = document.get("url") as! String
+            let imageUrl = document.get("imageUrl") as! String
+            
+            let article = Article()
+            article.author = author
+            article.desc = desc
+            article.headline = headline
+            article.url = url
+            article.imageUrl = imageUrl
+            self.markerArticles?.append(article)
+        }
+    }
+    
     override func viewWillAppear( _ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -76,55 +94,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         if let err = err {
                             print("Error getting documents: \(err)")
                         } else {
-                            for document in querySnapshot!.documents {
-                                let headline = document.get("headline") as! String
-                                let desc = document.get("desc") as! String
-                                let author = document.get("author") as? String
-                                let url = document.get("url") as! String
-                                let imageUrl = document.get("imageUrl") as! String
-                                let marker = document.get("marker") as! Bool
-                                let article = Article()
-                                article.author = author
-                                article.desc = desc
-                                article.headline = headline
-                                article.url = url
-                                article.imageUrl = imageUrl
-                                self.markerArticles?.append(article)
-                            }
+                            addArticleToMarkersList(querySnapshot)
                         }
                     }
-                    
-                    
+               
                 }
                 
             }
-            
-            
-            
         }
         
-        if searchByCountry == ""{
-            let locale: NSLocale = NSLocale.current as NSLocale
-            var country: String? = locale.countryCode
-            if country == "BY" {
-                country = "RU"
-            }
-            searchByCountry = country!
-            
-        }
-        if wordSearch == "" {
-            wordSearch = "none"
-        }
+        searchByCountry = searchCountry(country: searchByCountry)
+
+
+        wordSearch = search(search: wordSearch)
         settingsTableArray = [typeOfFunc, categoryName , searchByCountry, wordSearch,sourcesName]
         settingsTableArray = settingsTableArray.filter(){$0 != "none"}
         
         tableView.dataSource = self
         tableView.delegate = self
-        
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
-        
-        
-        
+  
+        typeOfInternet(name: name)
+
+        monitNetwork()
+    }
+    
+    func typeOfInternet(name: String){
         if name == "offline" {
             testFunc1()
         }
@@ -132,7 +127,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             fetchArticles(type: typeOfFunc,category: categoryName,country: searchByCountry,search: wordSearch, source: sourcesName)
         }
-        monitNetwork()
     }
     
     
@@ -174,7 +168,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func menuButton(_ sender: Any) {
         
-        let db = Firestore.firestore()
+        
         
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -187,10 +181,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
+        secondViewController.nameUsers = nameUsers
+
         show(secondViewController, sender: nil)
         
     }
     
+    func search(search:String) -> String{
+    if search == "" {
+        let newSearch = "none"
+        return newSearch
+     }
+        return search
+    }
+    func searchCountry(country: String) -> String{
+        if country == ""{
+            let locale: NSLocale = NSLocale.current as NSLocale
+            var country: String? = locale.countryCode
+            if country == "BY" {
+                country = "RU"
+            }
+            searchByCountry = country!
+            return country!
+        }
+        return country
+    }
     
     func fetchArticles(type: String, category: String,country: String,search: String,source: String){
         var urlstring: String = ""
@@ -228,7 +243,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         if type == "top" {
-            var lastCategoryName = newCountry+newcategoryName+newSourceName
+            let lastCategoryName = newCountry+newcategoryName+newSourceName
             
             urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "&apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
@@ -248,8 +263,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             (data,response,error) in
             
             if error != nil {
-                
-                print(error)
                 return
             }
             
@@ -352,18 +365,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 let articleIndex = (markerArticles?.firstIndex(where: { $0.headline == selectedArticleHeadline }))
                 if let articleIndex = articleIndex
                 {
-                    washingtonRef.document("marker\(selectedArticleHeadline)").delete()
+                    washingtonRef.document("marker\(selectedArticleHeadline ?? "")").delete()
                     markerArticles?.remove(at: articleIndex)
                     
                 }
                 else{
                     self.markerArticles?.append(self.articles![indexPath.row])
-                    washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline)").setData([
-                        "headline":markerArticles![markerArticles!.count - 1].headline,
-                        "desc": markerArticles![markerArticles!.count - 1].desc,
-                        "author": markerArticles![markerArticles!.count - 1].author,
-                        "url": markerArticles![markerArticles!.count - 1].url,
-                        "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl,
+                    washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
+                        "headline":markerArticles![markerArticles!.count - 1].headline!,
+                        "desc": markerArticles![markerArticles!.count - 1].desc!,
+                        "author": markerArticles![markerArticles!.count - 1].author!,
+                        "url": markerArticles![markerArticles!.count - 1].url!,
+                        "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl!,
                         "marker": markerArticles![markerArticles!.count - 1].marker
                     ])
                 }
@@ -371,7 +384,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         let selectedArticleUrl = articles![indexPath.row].url
         let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
-        if let articleIndex = articleIndex {
+        if articleIndex != nil {
             swipeMarker.image = UIImage(systemName: "star.fill")
             
             
@@ -467,7 +480,6 @@ extension UIImageView{
         
         let task = URLSession.shared.dataTask(with: urlRequest){ (data, response, error) in
             if error != nil {
-                print(error)
                 return
             }
             DispatchQueue.main.async {

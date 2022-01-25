@@ -18,6 +18,7 @@ class MarkerViewController: UIViewController {
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
     var sourcesName: String = ""
+    var nameUsers: String = ""
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -55,14 +56,17 @@ extension MarkerViewController: UITableViewDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "web") as? WebViewController else { return }
         
+        selectedArticle = markerArticles![indexPath.row]
         secondViewController.name = name
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.url = self.markerArticles?[indexPath.item].url
         secondViewController.categoryName = categoryName
         secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch
-        secondViewController.markerArticles = markerArticles
         secondViewController.selectedArticle = selectedArticle
+        secondViewController.markerArticles = markerArticles
+        secondViewController.nameUsers = nameUsers
+        secondViewController.sourcesName = sourcesName
         show(secondViewController, sender: nil)
         
         
@@ -83,7 +87,7 @@ extension MarkerViewController: UITableViewDataSource {
         cell.desc.text = self.markerArticles?[indexPath.item].desc
         cell.author.text = self.markerArticles?[indexPath.item].author
         if let imageURL = self.markerArticles?[indexPath.item].imageUrl {
-            cell.imgView.downloadImage(from: (imageURL) as! String)
+            cell.imgView.downloadImage(from: (imageURL) )
         }
         return cell
     }

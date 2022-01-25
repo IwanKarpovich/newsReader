@@ -32,12 +32,12 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent(AnalyticsEventScreenView,
-                           parameters: [AnalyticsParameterScreenName: selectedArticle!.url,
-                                       AnalyticsParameterScreenClass: selectedArticle!.url])
+                           parameters: [AnalyticsParameterScreenName: selectedArticle!.url!,
+                                       AnalyticsParameterScreenClass: selectedArticle!.url!])
         webview.load(URLRequest(url: URL(string:url!)!))
         let selectedArticleUrl = selectedArticle!.url
         let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
-        if let articleIndex = articleIndex
+        if articleIndex != nil
         {
             markerButton.isSelected.toggle()
             markerButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
@@ -48,7 +48,7 @@ class WebViewController: UIViewController {
     
     
     @IBAction func shareAction(_ sender: Any) {
-        let items:[Any] = [URL(string:url!)]
+        let items:[Any] = [URL(string:url!)!]
         
         let avc = UIActivityViewController(activityItems: items, applicationActivities: nil)
         self.present(avc, animated: true, completion: nil)
@@ -59,35 +59,28 @@ class WebViewController: UIViewController {
         markerButton.setImage(UIImage(systemName: "star"), for: .normal)
         markerButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
         let db = Firestore.firestore()
-        let washingtonRef = db.collection("users").document(nameUsers)
+        let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
         if markerButton.isSelected == false {
             let selectedArticleUrl = selectedArticle!.url
+            let selectedArticleHeadline = selectedArticle!.headline
+
             let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
             if let articleIndex = articleIndex
             {
-                washingtonRef.updateData([
-                    "headline": FieldValue.arrayRemove([markerArticles![articleIndex].headline]),
-                    "desc": FieldValue.arrayRemove([markerArticles![articleIndex].desc]),
-                    "author": FieldValue.arrayRemove([markerArticles![articleIndex].author]),
-                    "url": FieldValue.arrayRemove([markerArticles![articleIndex].url]),
-                    "imageUrl": FieldValue.arrayRemove([markerArticles![articleIndex].imageUrl]),
-                    "marker": FieldValue.arrayRemove([markerArticles![articleIndex].marker])
-                    
-                ])
+                washingtonRef.document("marker\(selectedArticleHeadline ?? "")").delete()
                 markerArticles?.remove(at: articleIndex)
             }
         }
         if markerButton.isSelected == true {
             self.markerArticles?.append(self.selectedArticle!)
-            washingtonRef.updateData([
-                "headline": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].headline]),
-                "desc": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].desc]),
-                "author": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].author]),
-                "url": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].url]),
-                "imageUrl": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].imageUrl]),
-                "marker": FieldValue.arrayUnion([markerArticles![markerArticles!.count - 1].marker])
+            washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
+                "headline":markerArticles![markerArticles!.count - 1].headline!,
+                "desc": markerArticles![markerArticles!.count - 1].desc!,
+                "author": markerArticles![markerArticles!.count - 1].author!,
+                "url": markerArticles![markerArticles!.count - 1].url!,
+                "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl!,
+                "marker": markerArticles![markerArticles!.count - 1].marker
             ])
-            
         }
         
     }

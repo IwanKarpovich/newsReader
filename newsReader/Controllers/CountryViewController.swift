@@ -73,12 +73,9 @@ extension CountryViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell = UITableViewCell(style: .default, reuseIdentifier: "indexPath")
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "indexPath")
         
-        
-        if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier: "cell") as! CountryTableViewCell
-        }
+
         if countryArray[indexPath.row] == searchByCountry {
             cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             numberIndex = indexPath
