@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D2E2B2B278C7E8100CBB46A /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2E2B2A278C7E8100CBB46A /* ContainerViewController.swift */; };
 		4D2E2B2D278C7E9D00CBB46A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2E2B2C278C7E9D00CBB46A /* MenuViewController.swift */; };
 		4D517ED8279CACA500718BE4 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517ED7279CACA500718BE4 /* SourcesViewController.swift */; };
 		4D517EDB279DDB0300718BE4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */; };
@@ -35,6 +34,7 @@
 		4DE6EC8B27972DC100BBD380 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6EC8A27972DC100BBD380 /* FirebaseAuth */; };
 		4DE6EC8D27972DC100BBD380 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6EC8C27972DC100BBD380 /* FirebaseDatabase */; };
 		4DE6EC8F27972DC100BBD380 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6EC8E27972DC100BBD380 /* FirebaseFirestore */; };
+		4DFCC81727A001A700A73FFF /* offlineJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFCC81627A001A700A73FFF /* offlineJSON.swift */; };
 		99192E62EB3D8A061980FA99 /* Pods_newsReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D5701D30EF18CE69674C8D8 /* Pods_newsReader.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,7 +57,6 @@
 
 /* Begin PBXFileReference section */
 		1D5701D30EF18CE69674C8D8 /* Pods_newsReader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_newsReader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D2E2B2A278C7E8100CBB46A /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		4D2E2B2C278C7E9D00CBB46A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		4D517ED7279CACA500718BE4 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
 		4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +84,7 @@
 		4DE6EC812791BAD800BBD380 /* MarkerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerViewController.swift; sourceTree = "<group>"; };
 		4DE6EC832797256A00BBD380 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		4DE6EC852797271A00BBD380 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4DFCC81627A001A700A73FFF /* offlineJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = offlineJSON.swift; sourceTree = "<group>"; };
 		7C4863DAC69BBEF291131074 /* Pods-newsReader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-newsReader.debug.xcconfig"; path = "Target Support Files/Pods-newsReader/Pods-newsReader.debug.xcconfig"; sourceTree = "<group>"; };
 		BE67A1E7028C1C252846CBC6 /* Pods-newsReader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-newsReader.release.xcconfig"; path = "Target Support Files/Pods-newsReader/Pods-newsReader.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,7 +177,6 @@
 		4DFCC811279FF91800A73FFF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4D2E2B2A278C7E8100CBB46A /* ContainerViewController.swift */,
 				4DE6EC832797256A00BBD380 /* AuthViewController.swift */,
 				4DB0796F2788D79400D5A427 /* ViewController.swift */,
 				4D2E2B2C278C7E9D00CBB46A /* MenuViewController.swift */,
@@ -205,6 +204,7 @@
 			isa = PBXGroup;
 			children = (
 				4D702FC72788E034003D3804 /* Article.swift */,
+				4DFCC81627A001A700A73FFF /* offlineJSON.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -436,13 +436,13 @@
 				4DB079702788D79400D5A427 /* ViewController.swift in Sources */,
 				4D702FCA278B698C003D3804 /* WebViewController.swift in Sources */,
 				4D9902E0278DC932004FB4F2 /* CountryViewController.swift in Sources */,
-				4D2E2B2B278C7E8100CBB46A /* ContainerViewController.swift in Sources */,
 				4D702FC82788E034003D3804 /* Article.swift in Sources */,
 				4D9902DE278DB115004FB4F2 /* CatogoryViewController.swift in Sources */,
 				4DB0796C2788D79400D5A427 /* AppDelegate.swift in Sources */,
 				4DB0799D2788D88C00D5A427 /* NewsTableViewCell.swift in Sources */,
 				4DE6EC842797256A00BBD380 /* AuthViewController.swift in Sources */,
 				4D517ED8279CACA500718BE4 /* SourcesViewController.swift in Sources */,
+				4DFCC81727A001A700A73FFF /* offlineJSON.swift in Sources */,
 				4DB0796E2788D79400D5A427 /* SceneDelegate.swift in Sources */,
 				4DE6EC822791BAD800BBD380 /* MarkerViewController.swift in Sources */,
 				4D2E2B2D278C7E9D00CBB46A /* MenuViewController.swift in Sources */,

@@ -16,15 +16,5 @@ class Article : NSObject{
     var marker: Bool = false
     
 }
-//struct Article: Codable {
-//   // let message: Double
-//      let articles : [inArticle]
-//
-//}
-//
-//struct inArticle: Codable {
-//   // let message: Double
-//    let author : String?
-//    let description:String
-//
-//}
+
+

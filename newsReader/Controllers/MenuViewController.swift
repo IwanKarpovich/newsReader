@@ -13,9 +13,6 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var searcByText: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-
-    
-    // let mySwitch = UISwitch()
     var nextView = 0
     var typeOfFunc = ""
     var name: String = ""
@@ -23,13 +20,11 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var categoryName: String = ""
     var wordSearch: String = ""
     var sourcesName: String = ""
-
-
     
     var typeSettings: [String] = ["top","category","country","marker","sources","signout"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,20 +32,16 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         tableView.delegate = self
         searcByText.delegate = self
         if wordSearch == "none"{
-        searcByText.text = ""
+            searcByText.text = ""
         }
         else{
             searcByText.text = wordSearch
         }
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func secretButton(_ sender: Any) {
-        print("ura")
-       
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
         nextView+=1
         if nextView == 5 {
             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
@@ -60,16 +51,12 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             else {
                 secondViewController.name = "online"
             }
-            //secondViewController.categoryName = categoryName
             secondViewController.searchByCountry = searchByCountry
             secondViewController.typeOfFunc = typeOfFunc
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
-
-
-
             show(secondViewController, sender: nil)
         }
     }
@@ -78,9 +65,6 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         wordSearch = searcByText.text!
-           print(wordSearch) //this prints My text
-        
-        
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
         secondViewController.name = name
         secondViewController.searchByCountry = searchByCountry
@@ -88,17 +72,11 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
         secondViewController.sourcesName = sourcesName
-
-
         show(secondViewController, sender: nil)
         
     }
     
 }
-
-
-
-
 
 extension MenuViewController: UITableViewDelegate {
     func tableView (_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -111,8 +89,6 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
             secondViewController.sourcesName = sourcesName
-
-            
             show(secondViewController, sender: nil)
         }
         if typeSettings[indexPath.row] == "country" {
@@ -124,9 +100,6 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
             secondViewController.sourcesName = sourcesName
-
-            
-            
             show(secondViewController, sender: nil)
         }
         
@@ -140,9 +113,6 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
-
-            
-
             show(secondViewController, sender: nil)
         }
         
@@ -155,32 +125,21 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
             secondViewController.sourcesName = sourcesName
-
             show(secondViewController, sender: nil)
         }
         
         if typeSettings[indexPath.row] == "signout" {
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            guard let secondViewController = storyboard.instantiateViewController(identifier: "auth") as? AuthViewController else { return }
-//            secondViewController.name = name
-//            secondViewController.typeOfFunc = typeOfFunc
-//            secondViewController.searchByCountry = searchByCountry
-//            secondViewController.categoryName = categoryName
-//            secondViewController.wordSearch = wordSearch
             
             do {
-             try Auth.auth().signOut()
-  
+                try Auth.auth().signOut()
+                
             } catch{
                 print(error)
             }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-
+            
             self.show(secondViewController, sender: nil)
-            
-            
-//            show(secondViewController, sender: nil)
         }
         
     }
@@ -194,11 +153,9 @@ extension MenuViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-//var arrayTextField = [UITextField]()
-
+        
         if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            print("create")
         }
         
         if typeSettings[indexPath.row] == "textfield" {
@@ -225,8 +182,7 @@ extension MenuViewController: UITableViewDataSource {
     
     
     @objc func switchChanged(_ sender: UISwitch!){
-        //print("Table row switch Changed\(sender.tag)")
-        print("Thw switch is \(sender.isOn ? "ON" : "OFF")")
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
         if sender.isOn {
@@ -235,16 +191,13 @@ extension MenuViewController: UITableViewDataSource {
         else{
             secondViewController.typeOfFunc = "none"
         }
-
+        
         secondViewController.name = name
-     
         secondViewController.categoryName = categoryName
         secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
-        
-        
         show(secondViewController, sender: nil)
     }
     

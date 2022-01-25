@@ -16,9 +16,9 @@ class CatogoryViewController: UIViewController {
     var searchByCountry: String = ""
     var wordSearch: String = ""
     var sourcesName: String = ""
-
-
-
+    
+    
+    
     var categoryArray: [String] = ["business","entertainment", "general","health","science","sports","technology","none"]
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
@@ -38,8 +38,6 @@ class CatogoryViewController: UIViewController {
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch
-
-
         show(secondViewController, sender: nil)
         
     }
@@ -75,9 +73,7 @@ extension CatogoryViewController: UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            print("create")
         }
-        print(categoryName)
         if categoryArray[indexPath.row] == categoryName {
             cell!.accessoryType = UITableViewCell.AccessoryType.checkmark
             numberIndex = indexPath

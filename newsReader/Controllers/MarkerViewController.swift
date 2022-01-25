@@ -8,7 +8,7 @@
 import UIKit
 
 class MarkerViewController: UIViewController {
-
+    
     var numberIndex: IndexPath = []
     var categoryName: String = ""
     var typeOfFunc = ""
@@ -18,24 +18,23 @@ class MarkerViewController: UIViewController {
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
     var sourcesName: String = ""
-
+    
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
-   
+        
     }
     
     @IBAction func goBackToMenu(_ sender: Any) {
-        print("go back")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-                
+        
         secondViewController.name = name
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.searchByCountry = searchByCountry
@@ -43,11 +42,6 @@ class MarkerViewController: UIViewController {
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
-
-       
-
-        
-        
         show(secondViewController, sender: nil)
     }
     
@@ -69,9 +63,6 @@ extension MarkerViewController: UITableViewDelegate {
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.selectedArticle = selectedArticle
-
-
-     //   secondViewController.articles = article
         show(secondViewController, sender: nil)
         
         
@@ -85,33 +76,21 @@ extension MarkerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //var cell = tableView.dequeueReusableCell(withIdentifier: "CountryTableViewCell", for: indexPath) as! CountryTableViewCell
-//        var cell = UITableViewCell(style: .default, reuseIdentifier: "indexPath")
-//
-//
-//        if cell == nil {
-//            cell = UITableViewCell(style: .default, reuseIdentifier: "cell") as! CountryTableViewCell
-//            print("create")
-//        }
-//
-//        return cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NewsTableViewCell", for: indexPath) as! NewsTableViewCell
-       
-        cell.title.text = self.markerArticles?[indexPath.item].headline
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NewsTableViewCell", for: indexPath) as! NewsTableViewCell
+        
+        cell.title.text = self.markerArticles?[indexPath.item].headline
         cell.desc.text = self.markerArticles?[indexPath.item].desc
         cell.author.text = self.markerArticles?[indexPath.item].author
-        print("Image")
         if let imageURL = self.markerArticles?[indexPath.item].imageUrl {
             cell.imgView.downloadImage(from: (imageURL) as! String)
         }
-       
-            return cell
+        return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
 }
 
