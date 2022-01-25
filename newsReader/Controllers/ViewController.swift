@@ -27,7 +27,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var newsReaderLabel: UINavigationBar!
     @IBOutlet weak var tableView: UITableView!
     
-    var articles: [Article]? = []
+    // var articles: [Article]? = []
+    
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
     var didSelectedArticle: Article?
@@ -97,15 +98,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             addArticleToMarkersList(querySnapshot)
                         }
                     }
-               
+                    
                 }
                 
             }
         }
         
         searchByCountry = searchCountry(country: searchByCountry)
-
-
+        
+        
         wordSearch = search(search: wordSearch)
         settingsTableArray = [typeOfFunc, categoryName , searchByCountry, wordSearch,sourcesName]
         settingsTableArray = settingsTableArray.filter(){$0 != "none"}
@@ -113,9 +114,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
-  
+        
         typeOfInternet(name: name)
-
+        
         monitNetwork()
     }
     
@@ -182,16 +183,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
         secondViewController.nameUsers = nameUsers
-
+        
         show(secondViewController, sender: nil)
         
     }
     
     func search(search:String) -> String{
-    if search == "" {
-        let newSearch = "none"
-        return newSearch
-     }
+        if search == "" {
+            let newSearch = "none"
+            return newSearch
+        }
         return search
     }
     func searchCountry(country: String) -> String{
@@ -257,47 +258,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         
-        let urlRequest =  URLRequest(url: URL(string: urlstring)!)
         
-        let task = URLSession.shared.dataTask(with: urlRequest){
-            (data,response,error) in
-            
-            if error != nil {
-                return
-            }
-            
-            self.articles = [Article]()
-            do{
-                
-                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String: AnyObject]
-                if let articlesFromJson = json["articles"] as? [[String:AnyObject]] {
-                    for articlesFromJson in articlesFromJson{
-                        let article = Article()
-                        let title = articlesFromJson["title"] as? String
-                        let author = articlesFromJson["author"] as? String
-                        let desc = articlesFromJson["description"] as? String
-                        let url = articlesFromJson["url"] as? String
-                        let urlToImage = articlesFromJson["urlToImage"] as? String
-                        
-                        
-                        article.author = author
-                        article.desc = desc
-                        article.headline = title
-                        article.url = url
-                        article.imageUrl = urlToImage
-                        
-                        self.articles?.append(article)
-                    }
-                }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            } catch{
-                print(error)
-            }
-        }
-        
-        task.resume()
+        // Articles self.tableView.reloadData()
+        articlesState.requestArticle(urlstring: urlstring, onSuccess: self.tableView.reloadData)
     }
     
     
@@ -313,7 +276,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return settingsTableArray.count//typeSettings.count
         }
         else {
-            return self.articles?.count ?? 0
+            return articlesState.articles.count
         }
     }
     
@@ -321,11 +284,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewsTableViewCell", for: indexPath) as! NewsTableViewCell
             
-            cell.title.text = self.articles?[indexPath.item].headline
+            cell.title.text = articlesState.articles[indexPath.item].headline
             
-            cell.desc.text = self.articles?[indexPath.item].desc
-            cell.author.text = self.articles?[indexPath.item].author
-            if let imageURL = self.articles?[indexPath.item].imageUrl {
+            cell.desc.text = articlesState.articles[indexPath.item].desc
+            cell.author.text = articlesState.articles[indexPath.item].author
+            if let imageURL = articlesState.articles[indexPath.item].imageUrl {
                 cell.imgView.downloadImage(from: (imageURL) as String)
             }
             
@@ -357,7 +320,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             (action, view ,success) in
             self.tableView.performBatchUpdates({
                 
-                let selectedArticleHeadline = articles![indexPath.row].headline
+                let selectedArticleHeadline = articlesState.articles[indexPath.row].headline
                 let db = Firestore.firestore()
                 let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
                 
@@ -370,19 +333,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                 }
                 else{
-                    self.markerArticles?.append(self.articles![indexPath.row])
+                    self.markerArticles?.append(articlesState.articles[indexPath.row])
                     washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
-                        "headline":markerArticles![markerArticles!.count - 1].headline!,
-                        "desc": markerArticles![markerArticles!.count - 1].desc!,
-                        "author": markerArticles![markerArticles!.count - 1].author!,
-                        "url": markerArticles![markerArticles!.count - 1].url!,
-                        "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl!,
+                        "headline":markerArticles![markerArticles!.count - 1].headline as Any,
+                        "desc": markerArticles![markerArticles!.count - 1].desc as Any,
+                        "author": markerArticles![markerArticles!.count - 1].author as Any,
+                        "url": markerArticles![markerArticles!.count - 1].url as Any,
+                        "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl as Any,
                         "marker": markerArticles![markerArticles!.count - 1].marker
                     ])
                 }
             }, completion: {(result) in success(true)})
         }
-        let selectedArticleUrl = articles![indexPath.row].url
+        let selectedArticleUrl = articlesState.articles[indexPath.row].url
         let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
         if articleIndex != nil {
             swipeMarker.image = UIImage(systemName: "star.fill")
@@ -406,10 +369,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if indexPath.section  == 1 {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "web") as? WebViewController else { return }
-            selectedArticle = articles![indexPath.row]
+            selectedArticle = articlesState.articles[indexPath.row]
             secondViewController.name = name
             secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.url = self.articles?[indexPath.item].url
+            secondViewController.url = articlesState.articles[indexPath.item].url
             secondViewController.categoryName = categoryName
             secondViewController.searchByCountry = searchByCountry
             secondViewController.wordSearch = wordSearch
@@ -436,68 +399,36 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func testFunc1(){
         let data = Data(inputJSON.utf8)
         
-        print(data)
-        self.articles = [Article]()
+        let newArticles = articlesState.parseJson(data)
+        articlesState.setArticles(newArticles:newArticles,onSuccess:  self.tableView.reloadData)
+    }
+}
         
-        do{
-            
-            if  let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]{
-                if let articlesFromJson = json["articles"] as? [[String:AnyObject]] {
-                    for articlesFromJson in articlesFromJson{
-                        let article = Article()
-                        let title = articlesFromJson["title"] as? String
-                        let author = articlesFromJson["author"] as? String
-                        let desc = articlesFromJson["description"] as? String
-                        let url = articlesFromJson["url"] as? String
-                        let urlToImage = articlesFromJson["urlToImage"] as? String
-                        
-                        
-                        article.author = author
-                        article.desc = desc
-                        article.headline = title
-                        article.url = url
-                        article.imageUrl = urlToImage
-                        self.articles?.append(article)
+extension UIImageView{
+            func downloadImage(from url:String = "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png"){
+                let const = URL(string: url)
+                let urlRequest = URLRequest(url: const ?? URL(string: "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png")! )
+                
+                let task = URLSession.shared.dataTask(with: urlRequest){ (data, response, error) in
+                    if error != nil {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.image = UIImage(data: data!)
                     }
                 }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }} catch{
-                print(error)
-            }
-    }
-    
-    enum NetworkError: Error {
-        case invaidData
-    }
-}
-
-extension UIImageView{
-    func downloadImage(from url:String = "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png"){
-        let const = URL(string: url)
-        let urlRequest = URLRequest(url: const ?? URL(string: "https://www.hzpc.com/uploads/overview-transparent-896/dc78aee8-3f50-5ba8-b8d3-6cf74852aa2b/3175818931/Colomba%20%282%29.png")! )
-        
-        let task = URLSession.shared.dataTask(with: urlRequest){ (data, response, error) in
-            if error != nil {
-                return
-            }
-            DispatchQueue.main.async {
-                self.image = UIImage(data: data!)
+                task.resume()
             }
         }
-        task.resume()
-    }
-}
-
-class Core {
-    
-    static let shared = Core()
-    
-    func isNewUser() -> Bool {
-        return !UserDefaults.standard.bool(forKey: "isNewUser")
-    }
-    func setIsNotNewUse(){
-        UserDefaults.standard.set(true, forKey: "isNewUser")
-    }
-}
+        
+        class Core {
+            
+            static let shared = Core()
+            
+            func isNewUser() -> Bool {
+                return !UserDefaults.standard.bool(forKey: "isNewUser")
+            }
+            func setIsNotNewUse(){
+                UserDefaults.standard.set(true, forKey: "isNewUser")
+            }
+        }
