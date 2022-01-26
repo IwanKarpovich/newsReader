@@ -35,6 +35,7 @@ class ArticlesState {
                     let urlToImage = articlesFromJson["urlToImage"] as? String
                     
                     
+                    
                     article.author = author
                     article.desc = desc
                     article.headline = title

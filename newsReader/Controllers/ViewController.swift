@@ -252,9 +252,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else{
             if newSearchName == "" {
-                newSearchName = "q=bitcoin" + "&"
+                newSearchName = "q=bitcoin"
             }
-            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + newSourceName + "&apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
         }
         
@@ -340,7 +340,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         "author": markerArticles![markerArticles!.count - 1].author as Any,
                         "url": markerArticles![markerArticles!.count - 1].url as Any,
                         "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl as Any,
-                        "marker": markerArticles![markerArticles!.count - 1].marker
+                        "marker": markerArticles![markerArticles!.count - 1].marker,
+                        "note":" "
                     ])
                 }
             }, completion: {(result) in success(true)})

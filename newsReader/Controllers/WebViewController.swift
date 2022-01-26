@@ -79,7 +79,8 @@ class WebViewController: UIViewController {
                 "author": markerArticles![markerArticles!.count - 1].author!,
                 "url": markerArticles![markerArticles!.count - 1].url!,
                 "imageUrl": markerArticles![markerArticles!.count - 1].imageUrl!,
-                "marker": markerArticles![markerArticles!.count - 1].marker
+                "marker": markerArticles![markerArticles!.count - 1].marker,
+                "note":" "
             ])
         }
         
