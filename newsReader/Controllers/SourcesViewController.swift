@@ -34,6 +34,10 @@ class SourcesViewController: UIViewController {
         
         secondViewController.categoryName = categoryName
         secondViewController.name = name
+        
+        if sourcesName == "none" {
+            typeOfFunc = "top"
+        }
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.searchByCountry = searchByCountry
         secondViewController.wordSearch = wordSearch

@@ -22,13 +22,20 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var sourcesName: String = ""
     var nameUsers: String = ""
     
-    var typeSettings: [String] = ["top","category","country","marker","sources","signout"]
+    var typeSettings: [String] = ["top","category","country","marker","sources","signout","voice"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if(wordSearch == "none" || wordSearch == "") && ( sourcesName == "none" || sourcesName == "" ) {
+            typeSettings.remove(at: 0)
+        }
+
+        
+        
         tableView.dataSource = self
         tableView.delegate = self
         searcByText.delegate = self
@@ -115,6 +122,20 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
             secondViewController.nameUsers = nameUsers
+
+            show(secondViewController, sender: nil)
+        }
+        if typeSettings[indexPath.row] == "voice" {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "voice") as? VoiceViewController else { return }
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+//            secondViewController.nameUsers = nameUsers
 
             show(secondViewController, sender: nil)
         }

@@ -36,6 +36,7 @@
 		4DE6EC8F27972DC100BBD380 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6EC8E27972DC100BBD380 /* FirebaseFirestore */; };
 		4DFCC81727A001A700A73FFF /* offlineJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFCC81627A001A700A73FFF /* offlineJSON.swift */; };
 		4DFCC81927A1458F00A73FFF /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFCC81827A1458F00A73FFF /* NoteViewController.swift */; };
+		4DFCC81B27A1BAB900A73FFF /* VoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFCC81A27A1BAB700A73FFF /* VoiceViewController.swift */; };
 		99192E62EB3D8A061980FA99 /* Pods_newsReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D5701D30EF18CE69674C8D8 /* Pods_newsReader.framework */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +88,7 @@
 		4DE6EC852797271A00BBD380 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4DFCC81627A001A700A73FFF /* offlineJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = offlineJSON.swift; sourceTree = "<group>"; };
 		4DFCC81827A1458F00A73FFF /* NoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
+		4DFCC81A27A1BAB700A73FFF /* VoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceViewController.swift; sourceTree = "<group>"; };
 		7C4863DAC69BBEF291131074 /* Pods-newsReader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-newsReader.debug.xcconfig"; path = "Target Support Files/Pods-newsReader/Pods-newsReader.debug.xcconfig"; sourceTree = "<group>"; };
 		BE67A1E7028C1C252846CBC6 /* Pods-newsReader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-newsReader.release.xcconfig"; path = "Target Support Files/Pods-newsReader/Pods-newsReader.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -189,6 +191,7 @@
 				4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */,
 				4D702FC9278B698C003D3804 /* WebViewController.swift */,
 				4DFCC81827A1458F00A73FFF /* NoteViewController.swift */,
+				4DFCC81A27A1BAB700A73FFF /* VoiceViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				4DB0796C2788D79400D5A427 /* AppDelegate.swift in Sources */,
 				4DFCC81927A1458F00A73FFF /* NoteViewController.swift in Sources */,
 				4DB0799D2788D88C00D5A427 /* NewsTableViewCell.swift in Sources */,
+				4DFCC81B27A1BAB900A73FFF /* VoiceViewController.swift in Sources */,
 				4DE6EC842797256A00BBD380 /* AuthViewController.swift in Sources */,
 				4D517ED8279CACA500718BE4 /* SourcesViewController.swift in Sources */,
 				4DFCC81727A001A700A73FFF /* offlineJSON.swift in Sources */,

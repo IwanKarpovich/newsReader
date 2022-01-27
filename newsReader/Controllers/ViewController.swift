@@ -71,7 +71,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewWillAppear( _ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
+        let chipView = MDCChipView()
+        chipView.titleLabel.text = "Furkan@vijapura.com"
+        chipView.setTitleColor(UIColor.red, for: .selected)
+        chipView.sizeToFit()
+        chipView.backgroundColor(for: .selected)
+        self.view.addSubview(chipView)
+        self.userAdd.addSubview(chipView)
         
         handle = Auth.auth().addStateDidChangeListener{ [self](auth, user) in
             
@@ -218,43 +224,60 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             newcategoryName = ""
         }
         else{
-            newcategoryName = "&"+"category=" + category
+            newcategoryName = ""+"category=" + category + "&"
         }
         
-        if search == "none"{
-            newSearchName = ""
+        
+//        if source == "none"{
+//            newSourceName = ""
+//        }
+//        else{
+//            newSourceName = ""+"sources=" + source + "&"
+//        }
+        
+        if country == "none"{
+            newCountry = ""
         }
         else{
-            newSearchName = "q=" + search + "&"
+            newCountry = "country=" + country + "&"
         }
         
         if source == "none"{
             newSourceName = ""
         }
         else{
-            newSourceName = ""+"sources=" + source
+            newcategoryName = ""
+            newCountry = ""
+
+            newSourceName = ""+"sources=" + source + "&"
         }
         
-        if country == "none"{
-            newCountry = ""
+        if search == "none"{
+            newSearchName = ""
         }
         else{
-            newCountry = "country=" + country
+            
+            newSearchName = "q=" + search + ""
+            
+            if newSourceName != "none"{
+                newSearchName = newSearchName + "&"
+            }
         }
+
         
         
         if type == "top" {
             let lastCategoryName = newCountry+newcategoryName+newSourceName
             
-            urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "&apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+            urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
             
         }
         else{
-            if newSearchName == "" {
-                newSearchName = "q=bitcoin"
-            }
-            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + newSourceName + "&apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+//            if newSearchName == "" {
+//                newSearchName = "q=bitcoin"
+//            }
+            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + newSourceName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
             
         }
         
