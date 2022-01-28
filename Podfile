@@ -6,5 +6,4 @@ target 'newsReader' do
   use_frameworks!
   pod 'FBSDKLoginKit'
 
-
 end

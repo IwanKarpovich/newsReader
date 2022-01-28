@@ -27,5 +27,13 @@ class NewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imgView.image = nil
+        title.text = nil
+        desc.text = nil
+        author.text = nil
+    }
     
 }

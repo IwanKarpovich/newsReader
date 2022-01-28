@@ -18,22 +18,22 @@ class NoteViewController: UIViewController {
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
     var sourcesName: String = ""
-    var nameUsers: String = ""
+    var userNames: String = ""
     @IBOutlet weak var textView: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let db = Firestore.firestore()
-        let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+        let userMarkers = db.collection("users").document(userNames).collection("markers")
         let selectedArticleUrl = selectedArticle!.url
         let selectedArticleHeadline = selectedArticle!.headline
         var note: String = " "
         let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
         if let articleIndex = articleIndex
         {
-            let wf =  washingtonRef.document("marker\(selectedArticleHeadline ?? "")")
+            let wf =  userMarkers.document("marker\(selectedArticleHeadline ?? "")")
             
-            washingtonRef.getDocuments() { (querySnapshot, err) in
+            userMarkers.getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
@@ -65,11 +65,11 @@ class NoteViewController: UIViewController {
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
-        secondViewController.nameUsers = nameUsers
+        secondViewController.userNames = userNames
         let text = textView.text
         
         let db = Firestore.firestore()
-        let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+        let washingtonRef = db.collection("users").document(userNames).collection("markers")
         let selectedArticleUrl = selectedArticle!.url
         let selectedArticleHeadline = selectedArticle!.headline
 

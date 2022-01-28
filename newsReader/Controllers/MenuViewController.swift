@@ -20,9 +20,9 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var categoryName: String = ""
     var wordSearch: String = ""
     var sourcesName: String = ""
-    var nameUsers: String = ""
+    var userNames: String = ""
     
-    var typeSettings: [String] = ["top","category","country","marker","sources","signout","voice"]
+    var settingTypes: [String] = ["top","category","country","marker","sources","signout","voice"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
     
@@ -31,7 +31,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         if(wordSearch == "none" || wordSearch == "") && ( sourcesName == "none" || sourcesName == "" ) {
-            typeSettings.remove(at: 0)
+            settingTypes.remove(at: 0)
         }
 
         
@@ -47,12 +47,26 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @IBAction func goToNews(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
+        
+        secondViewController.searchByCountry = searchByCountry
+        secondViewController.name = name
+        secondViewController.typeOfFunc = typeOfFunc
+        secondViewController.categoryName = categoryName
+        secondViewController.wordSearch = wordSearch
+        secondViewController.sourcesName = sourcesName
+        show(secondViewController, sender: nil)
+    }
+    
     @IBAction func secretButton(_ sender: Any) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         nextView+=1
+    #if DEBUG
         if nextView == 5 {
-            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
             if name == "online" {
                 secondViewController.name = "offline"
             }
@@ -67,13 +81,14 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             secondViewController.sourcesName = sourcesName
             show(secondViewController, sender: nil)
         }
+#endif
     }
     
     @IBAction func goToSearchNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         wordSearch = searcByText.text!
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
         secondViewController.name = name
         secondViewController.searchByCountry = searchByCountry
         secondViewController.typeOfFunc = typeOfFunc
@@ -88,7 +103,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
 
 extension MenuViewController: UITableViewDelegate {
     func tableView (_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if typeSettings[indexPath.row] == "category" {
+        if settingTypes[indexPath.row] == "category" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "category") as? CatogoryViewController else { return }
             secondViewController.name = name
@@ -99,7 +114,7 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.sourcesName = sourcesName
             show(secondViewController, sender: nil)
         }
-        if typeSettings[indexPath.row] == "country" {
+        if settingTypes[indexPath.row] == "country" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "country") as? CountryViewController else { return }
             secondViewController.name = name
@@ -111,7 +126,7 @@ extension MenuViewController: UITableViewDelegate {
             show(secondViewController, sender: nil)
         }
         
-        if typeSettings[indexPath.row] == "marker" {
+        if settingTypes[indexPath.row] == "marker" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "marker") as? MarkerViewController else { return }
             secondViewController.name = name
@@ -121,11 +136,11 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.wordSearch = wordSearch
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
-            secondViewController.nameUsers = nameUsers
+            secondViewController.userNames = userNames
 
             show(secondViewController, sender: nil)
         }
-        if typeSettings[indexPath.row] == "voice" {
+        if settingTypes[indexPath.row] == "voice" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "voice") as? VoiceViewController else { return }
 //            secondViewController.name = name
@@ -140,7 +155,7 @@ extension MenuViewController: UITableViewDelegate {
             show(secondViewController, sender: nil)
         }
         
-        if typeSettings[indexPath.row] == "sources" {
+        if settingTypes[indexPath.row] == "sources" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "sources") as? SourcesViewController else { return }
             secondViewController.name = name
@@ -152,7 +167,7 @@ extension MenuViewController: UITableViewDelegate {
             show(secondViewController, sender: nil)
         }
         
-        if typeSettings[indexPath.row] == "signout" {
+        if settingTypes[indexPath.row] == "signout" {
             
             do {
                 try Auth.auth().signOut()
@@ -161,7 +176,7 @@ extension MenuViewController: UITableViewDelegate {
                 print(error)
             }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
             
             self.show(secondViewController, sender: nil)
         }
@@ -172,7 +187,7 @@ extension MenuViewController: UITableViewDelegate {
 
 extension MenuViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return typeSettings.count
+        return settingTypes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -182,12 +197,12 @@ extension MenuViewController: UITableViewDataSource {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         }
         
-        if typeSettings[indexPath.row] == "textfield" {
+        if settingTypes[indexPath.row] == "textfield" {
             
         }
         
-        cell?.textLabel!.text = typeSettings[indexPath.row]
-        if typeSettings[indexPath.row] == "top" {
+        cell?.textLabel!.text = settingTypes[indexPath.row]
+        if settingTypes[indexPath.row] == "top" {
             let switchView = UISwitch(frame: .zero)
             if typeOfFunc == "top" {
                 switchView.setOn(true, animated: true)
@@ -208,7 +223,7 @@ extension MenuViewController: UITableViewDataSource {
     @objc func switchChanged(_ sender: UISwitch!){
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
         if sender.isOn {
             secondViewController.typeOfFunc = "top"
         }

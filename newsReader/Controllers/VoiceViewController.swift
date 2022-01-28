@@ -107,7 +107,7 @@ class VoiceViewController: UIViewController {
             
             if message == "Клюква"{
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+                guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
                 
                 self.show(secondViewController, sender: nil)
             }

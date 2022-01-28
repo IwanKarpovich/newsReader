@@ -26,16 +26,16 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                         let credential = FacebookAuthProvider.credential(withAccessToken:
                                                                             AccessToken.current!.tokenString)
                         Auth.auth().signIn(with: credential, completion: {(result, error) in
-                            var nameUsers: String = ""
+                            var userNames: String = ""
                             if error == nil {
-                                nameUsers = (result?.user.email)!
+                                userNames = (result?.user.email)!
                                 
                             }
                             
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             
-                            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-                            secondViewController.nameUsers = nameUsers
+                            guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
+                            secondViewController.userNames = userNames
                             
                             
                             self.show(secondViewController, sender: nil)
@@ -76,15 +76,15 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                             let credential = FacebookAuthProvider.credential(withAccessToken:
                                                                                 AccessToken.current!.tokenString)
                             Auth.auth().signIn(with: credential, completion: {(result, error) in
-                                var nameUsers: String = ""
+                                var userNames: String = ""
                                 if error == nil {
-                                    nameUsers = (result?.user.email)!
+                                    userNames = (result?.user.email)!
                                     
                                 }
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 
-                                guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-                                secondViewController.nameUsers = nameUsers
+                                guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
+                                secondViewController.userNames = userNames
                                 
                                 
                                 self.show(secondViewController, sender: nil)

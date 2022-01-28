@@ -21,9 +21,9 @@ class MarkerViewController: UIViewController {
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
     var sourcesName: String = ""
-    var nameUsers: String = ""
+    var userNames: String = ""
     
-    var arrayHeadline: [String] = []
+    var Headlines: [String] = []
     var noteHeadline: [String] = []
     
     @IBOutlet weak var tableView: UITableView!
@@ -31,7 +31,7 @@ class MarkerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let db = Firestore.firestore()
-        let userMarkers = db.collection("users").document(nameUsers).collection("markers")
+        let userMarkers = db.collection("users").document(userNames).collection("markers")
         userMarkers.getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -40,7 +40,7 @@ class MarkerViewController: UIViewController {
                         let select = document.get("headline") as! String
                         let note = document.get("note") as! String
                         
-                        self.arrayHeadline.append(select)
+                        self.Headlines.append(select)
                         self.noteHeadline.append(note)
                     }
                 }
@@ -53,8 +53,8 @@ class MarkerViewController: UIViewController {
     
     @IBAction func goBackToMenu(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-        
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "menu") as? MenuViewController else { return }
+
         secondViewController.name = name
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.searchByCountry = searchByCountry
@@ -98,7 +98,7 @@ extension MarkerViewController: UITableViewDelegate {
                              secondViewController.wordSearch = wordSearch
                              secondViewController.selectedArticle = selectedArticle
                              secondViewController.markerArticles = markerArticles
-                             secondViewController.nameUsers = nameUsers
+                             secondViewController.userNames = userNames
                              secondViewController.sourcesName = sourcesName
                              show(secondViewController, sender: nil)
                              print("asdfsdf")
@@ -119,14 +119,14 @@ extension MarkerViewController: UITableViewDelegate {
         { [self]
             (action,view,success) in
             let db = Firestore.firestore()
-            let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+            let userMarkers = db.collection("users").document(userNames).collection("markers")
             let selectedArticleUrl = markerArticles![indexPath.row].url
             let selectedArticleHeadline = markerArticles![indexPath.row].headline
 
             let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
             if let articleIndex = articleIndex
             {
-                washingtonRef.document("marker\(selectedArticleHeadline ?? "")").updateData(([
+                userMarkers.document("marker\(selectedArticleHeadline ?? "")").updateData(([
                     "note":" "
                 ]))
                 noteHeadline[indexPath.row] = " "
@@ -138,7 +138,7 @@ extension MarkerViewController: UITableViewDelegate {
         var arrayActions = [swipeNote]
         
         let db = Firestore.firestore()
-        let userMarkers = db.collection("users").document(nameUsers).collection("markers")
+        let userMarkers = db.collection("users").document(userNames).collection("markers")
         let selectedArticleUrl = markerArticles![indexPath.row].url
         let selectedArticleHeadline = markerArticles![indexPath.row].headline!
         var note: String = " "
@@ -161,8 +161,8 @@ extension MarkerViewController: UITableViewDelegate {
 //                }
 //            }
         
-        for i in 0...(arrayHeadline.count-1) {
-            if arrayHeadline[i] == selectedArticleHeadline {
+        for i in 0...(Headlines.count-1) {
+            if Headlines[i] == selectedArticleHeadline {
                 note = noteHeadline[i]
                if note != " "{
                         arrayActions.append(delete)
@@ -199,7 +199,7 @@ extension MarkerViewController: UITableViewDelegate {
         secondViewController.wordSearch = wordSearch
         secondViewController.selectedArticle = selectedArticle
         secondViewController.markerArticles = markerArticles
-        secondViewController.nameUsers = nameUsers
+        secondViewController.userNames = userNames
         secondViewController.sourcesName = sourcesName
         show(secondViewController, sender: nil)
         

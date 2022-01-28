@@ -30,8 +30,8 @@ class SourcesViewController: UIViewController {
     
     @IBAction func backToNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
-        
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "menu") as? MenuViewController else { return }
+
         secondViewController.categoryName = categoryName
         secondViewController.name = name
         
@@ -44,7 +44,11 @@ class SourcesViewController: UIViewController {
         secondViewController.sourcesName = sourcesName
         show(secondViewController, sender: nil)
         
+
+        
     }
+    
+    
 }
 
 extension SourcesViewController: UITableViewDelegate {

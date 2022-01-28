@@ -18,7 +18,7 @@ class WebViewController: UIViewController {
     var wordSearch: String = ""
     var markerArticles: [Article]? = []
     var selectedArticle: Article?
-    var nameUsers: String = ""
+    var userNames: String = ""
     var sourcesName: String = ""
     
     
@@ -59,7 +59,7 @@ class WebViewController: UIViewController {
         markerButton.setImage(UIImage(systemName: "star"), for: .normal)
         markerButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
         let db = Firestore.firestore()
-        let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+        let userMarkers = db.collection("users").document(userNames).collection("markers")
         if markerButton.isSelected == false {
             let selectedArticleUrl = selectedArticle!.url
             let selectedArticleHeadline = selectedArticle!.headline
@@ -67,13 +67,13 @@ class WebViewController: UIViewController {
             let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
             if let articleIndex = articleIndex
             {
-                washingtonRef.document("marker\(selectedArticleHeadline ?? "")").delete()
+                userMarkers.document("marker\(selectedArticleHeadline ?? "")").delete()
                 markerArticles?.remove(at: articleIndex)
             }
         }
         if markerButton.isSelected == true {
             self.markerArticles?.append(self.selectedArticle!)
-            washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
+            userMarkers.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
                 "headline":markerArticles![markerArticles!.count - 1].headline!,
                 "desc": markerArticles![markerArticles!.count - 1].desc!,
                 "author": markerArticles![markerArticles!.count - 1].author!,
@@ -90,7 +90,7 @@ class WebViewController: UIViewController {
     @IBAction func goBack(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
         if name == "online"{
             secondViewController.name = "online"
         }

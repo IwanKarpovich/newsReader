@@ -9,11 +9,12 @@ import UIKit
 import Network
 import Firebase
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+class NewsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var timer: Timer?
     
-    var nameUsers = ""
-    var name = "offline"
+    var userNames = ""
+    var name = "online"
     var typeOfFunc = "top"
     var categoryName: String = "none"
     var searchByCountry: String = ""
@@ -22,6 +23,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var handle: AuthStateDidChangeListenerHandle?
     var sourcesName: String = "none"
     
+    @IBOutlet weak var collectionView: UICollectionView!
     
     
     @IBOutlet weak var newsReaderLabel: UINavigationBar!
@@ -31,7 +33,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
-    var didSelectedArticle: Article?
     
     override func viewWillDisappear( _ animated: Bool){
         super.viewWillDisappear(animated)
@@ -71,13 +72,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewWillAppear( _ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let chipView = MDCChipView()
-        chipView.titleLabel.text = "Furkan@vijapura.com"
-        chipView.setTitleColor(UIColor.red, for: .selected)
-        chipView.sizeToFit()
-        chipView.backgroundColor(for: .selected)
-        self.view.addSubview(chipView)
-        self.userAdd.addSubview(chipView)
+
         
         handle = Auth.auth().addStateDidChangeListener{ [self](auth, user) in
             
@@ -85,19 +80,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 goToAuthefication()
             }
             else  {
-                self.nameUsers = (user?.email)!
+                self.userNames = (user?.email)!
                 Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
-                    AnalyticsParameterItemID: "id-\(nameUsers)",
-                    AnalyticsParameterItemName: nameUsers,
+                    AnalyticsParameterItemID: "id-\(userNames)",
+                    AnalyticsParameterItemName: userNames,
                     AnalyticsParameterContentType: "cont",
                 ])
-                Analytics.setUserProperty(nameUsers, forName: "name users - ")
-                Analytics.setUserID(nameUsers)
+                Analytics.setUserProperty(userNames, forName: "name users - ")
+                Analytics.setUserID(userNames)
                 
                 if markerArticles!.count == 0 {
                     let db = Firestore.firestore()
                     
-                    db.collection("users").document(nameUsers).collection("markers").getDocuments() { (querySnapshot, err) in
+                    db.collection("users").document(userNames).collection("markers").getDocuments() { (querySnapshot, err) in
                         if let err = err {
                             print("Error getting documents: \(err)")
                         } else {
@@ -120,7 +115,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
-        
+        tableView.register(UINib(nibName: "ChipTableViewCell", bundle: nil), forCellReuseIdentifier: "ChipTableViewCell")
+
+        self.collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
         typeOfInternet(name: name)
         
         monitNetwork()
@@ -188,11 +187,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
-        secondViewController.nameUsers = nameUsers
+        secondViewController.userNames = userNames
         
         show(secondViewController, sender: nil)
-        
     }
+        
+    
     
     func search(search:String) -> String{
         if search == "" {
@@ -296,7 +296,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return settingsTableArray.count//typeSettings.count
+            return 0 //settingsTableArray.count//typeSettings.count
         }
         else {
             return articlesState.articles.count
@@ -319,20 +319,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         else {
-            var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ChipTableViewCell", for: indexPath) as! ChipTableViewCell
             
-            if cell == nil {
-                cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            }
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "x.circle")
+
+            // If you want to enable Color in the SF Symbols.
+
+            let fullString = NSMutableAttributedString(string: "  \(settingsTableArray[indexPath.row]) NEWS ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            fullString.append(NSAttributedString(string: "  "))
+            
+            cell.chipLabel.attributedText = fullString
             
             
             
-            cell?.backgroundColor = UIColor.systemGray5
-            cell?.layer.cornerRadius = 8
-            cell?.textLabel!.text = settingsTableArray[indexPath.row] + " news"
             
-            return cell!
+
             
+            return cell
+//
         }
         
     }
@@ -345,19 +352,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
                 let selectedArticleHeadline = articlesState.articles[indexPath.row].headline
                 let db = Firestore.firestore()
-                let washingtonRef = db.collection("users").document(nameUsers).collection("markers")
+                let userMarkers = db.collection("users").document(userNames).collection("markers")
                 
                 
                 let articleIndex = (markerArticles?.firstIndex(where: { $0.headline == selectedArticleHeadline }))
                 if let articleIndex = articleIndex
                 {
-                    washingtonRef.document("marker\(selectedArticleHeadline ?? "")").delete()
+                    userMarkers.document("marker\(selectedArticleHeadline ?? "")").delete()
                     markerArticles?.remove(at: articleIndex)
                     
                 }
                 else{
                     self.markerArticles?.append(articlesState.articles[indexPath.row])
-                    washingtonRef.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
+                    userMarkers.document("marker\( markerArticles![markerArticles!.count - 1].headline ?? "")").setData([
                         "headline":markerArticles![markerArticles!.count - 1].headline as Any,
                         "desc": markerArticles![markerArticles!.count - 1].desc as Any,
                         "author": markerArticles![markerArticles!.count - 1].author as Any,
@@ -402,7 +409,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             secondViewController.wordSearch = wordSearch
             secondViewController.selectedArticle = selectedArticle
             secondViewController.markerArticles = markerArticles
-            secondViewController.nameUsers = nameUsers
+            secondViewController.userNames = userNames
             secondViewController.sourcesName = sourcesName
             
             show(secondViewController, sender: nil)
@@ -456,3 +463,30 @@ extension UIImageView{
                 UserDefaults.standard.set(true, forKey: "isNewUser")
             }
         }
+
+extension NewsViewController: UICollectionViewDataSource, UICollectionViewDelegate{
+    
+    func collectionView (_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+       // settingsTableArray.remove(at: indexPath.row)
+        
+
+     //collectionView.reloadData()
+        
+    }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return settingsTableArray.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
+        
+        cell.textLabel.text = "   " + settingsTableArray[indexPath.row] + "   "
+        return cell
+        
+    }
+    
+    
+}

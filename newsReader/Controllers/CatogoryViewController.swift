@@ -31,13 +31,15 @@ class CatogoryViewController: UIViewController {
     
     @IBAction func backToNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? ViewController else { return }
+        guard let secondViewController = storyboard.instantiateViewController(identifier: "menu") as? MenuViewController else { return }
         
-        secondViewController.categoryName = categoryName
         secondViewController.name = name
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.searchByCountry = searchByCountry
+        secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
+        secondViewController.sourcesName = sourcesName
+        
         show(secondViewController, sender: nil)
         
     }
