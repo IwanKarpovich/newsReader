@@ -25,7 +25,7 @@ class WelcomeViewController: UIViewController {
     private func configure() {
         scrollView.frame =  holderView.bounds
         holderView.addSubview(scrollView)
-        let titles = ["Welcome", "Location", "All set"]
+        let titles = ["Welcome", "Login With Facebook", "Go check News"]
         
         for x in 0..<3 {
             let pageView = UIView( frame: CGRect(x: CGFloat(x) *  (holderView.frame.size.width), y: 0, width: holderView.frame.size.width, height:  holderView.frame.size.width))
@@ -33,10 +33,11 @@ class WelcomeViewController: UIViewController {
             
             let label = UILabel(frame: CGRect(x: 10, y: 10, width: pageView.frame.size.width - 20, height: 120))
             let imageView = UIImageView(frame: CGRect(x: 10, y: 10 + 120 + 10, width: pageView.frame.size.width - 20, height: pageView.frame.size.height - 60 - 130 - 15))
-            let button = UIButton(frame: CGRect(x: 10, y: pageView.frame.size.height-60 , width: pageView.frame.size.width - 20, height: 50))
+            let button = UIButton(frame: CGRect(x: 10, y: pageView.frame.size.height-60 , width: pageView.frame.size.width - 20, height: 25))
             
             
             label.textAlignment = .center
+            
             label.font = UIFont(name: "Helvetica - Bold", size: 32)
             pageView.addSubview(label)
             label.text = titles[x]
@@ -46,7 +47,8 @@ class WelcomeViewController: UIViewController {
             pageView.addSubview(imageView)
             
             button.setTitleColor(.white, for: .normal)
-            button.backgroundColor = .black
+            button.backgroundColor = .systemGray
+            button.layer.cornerRadius = 12
             button.setTitle("Continue", for: .normal)
             if x == 2  {
                 button.setTitle("get Started", for: .normal)

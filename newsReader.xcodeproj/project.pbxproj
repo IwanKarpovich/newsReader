@@ -11,6 +11,8 @@
 		4D2232A827A2DF930077B035 /* ChipTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D2232A627A2DF930077B035 /* ChipTableViewCell.xib */; };
 		4D2232B227A31BFA0077B035 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2232B027A31BFA0077B035 /* CollectionViewCell.swift */; };
 		4D2232B327A31BFA0077B035 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D2232B127A31BFA0077B035 /* CollectionViewCell.xib */; };
+		4D2232B727A45ACC0077B035 /* BadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2232B527A45ACB0077B035 /* BadTableViewCell.swift */; };
+		4D2232B827A45ACC0077B035 /* BadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D2232B627A45ACB0077B035 /* BadTableViewCell.xib */; };
 		4D2E2B2D278C7E9D00CBB46A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2E2B2C278C7E9D00CBB46A /* MenuViewController.swift */; };
 		4D517ED8279CACA500718BE4 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517ED7279CACA500718BE4 /* SourcesViewController.swift */; };
 		4D517EDB279DDB0300718BE4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */; };
@@ -67,6 +69,8 @@
 		4D2232A627A2DF930077B035 /* ChipTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChipTableViewCell.xib; sourceTree = "<group>"; };
 		4D2232B027A31BFA0077B035 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		4D2232B127A31BFA0077B035 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
+		4D2232B527A45ACB0077B035 /* BadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadTableViewCell.swift; sourceTree = "<group>"; };
+		4D2232B627A45ACB0077B035 /* BadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BadTableViewCell.xib; sourceTree = "<group>"; };
 		4D2E2B2C278C7E9D00CBB46A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		4D517ED7279CACA500718BE4 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
 		4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -140,6 +144,15 @@
 			name = ChipTableViewCell;
 			sourceTree = "<group>";
 		};
+		4D2232B427A45A9E0077B035 /* ChipViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				4D2232B027A31BFA0077B035 /* CollectionViewCell.swift */,
+				4D2232B127A31BFA0077B035 /* CollectionViewCell.xib */,
+			);
+			name = ChipViewCell;
+			sourceTree = "<group>";
+		};
 		4DB0795F2788D79400D5A427 = {
 			isa = PBXGroup;
 			children = (
@@ -205,9 +218,9 @@
 				4D9902DF278DC932004FB4F2 /* CountryViewController.swift */,
 				4D517ED7279CACA500718BE4 /* SourcesViewController.swift */,
 				4DE6EC812791BAD800BBD380 /* MarkerViewController.swift */,
-				4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */,
-				4D702FC9278B698C003D3804 /* WebViewController.swift */,
 				4DFCC81827A1458F00A73FFF /* NoteViewController.swift */,
+				4D702FC9278B698C003D3804 /* WebViewController.swift */,
+				4D517EDA279DDB0300718BE4 /* WelcomeViewController.swift */,
 				4DFCC81A27A1BAB700A73FFF /* VoiceViewController.swift */,
 			);
 			path = Controllers;
@@ -220,8 +233,9 @@
 				4DFCC815279FFA0B00A73FFF /* TableViewCellMenuNews */,
 				4DFCC814279FF9D100A73FFF /* TableViewCell */,
 				4D2232A927A2DFA70077B035 /* ChipTableViewCell */,
-				4D2232B027A31BFA0077B035 /* CollectionViewCell.swift */,
-				4D2232B127A31BFA0077B035 /* CollectionViewCell.xib */,
+				4D2232B427A45A9E0077B035 /* ChipViewCell */,
+				4D2232B527A45ACB0077B035 /* BadTableViewCell.swift */,
+				4D2232B627A45ACB0077B035 /* BadTableViewCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -391,6 +405,7 @@
 				4DB079752788D79600D5A427 /* Assets.xcassets in Resources */,
 				4DB0799E2788D88C00D5A427 /* NewsTableViewCell.xib in Resources */,
 				4DB079732788D79400D5A427 /* Main.storyboard in Resources */,
+				4D2232B827A45ACC0077B035 /* BadTableViewCell.xib in Resources */,
 				4D2232B327A31BFA0077B035 /* CollectionViewCell.xib in Resources */,
 				4DDC42202790B65700D5596F /* CountryTableViewCell.xib in Resources */,
 			);
@@ -466,6 +481,7 @@
 				4D702FCA278B698C003D3804 /* WebViewController.swift in Sources */,
 				4D9902E0278DC932004FB4F2 /* CountryViewController.swift in Sources */,
 				4D702FC82788E034003D3804 /* Article.swift in Sources */,
+				4D2232B727A45ACC0077B035 /* BadTableViewCell.swift in Sources */,
 				4D9902DE278DB115004FB4F2 /* CatogoryViewController.swift in Sources */,
 				4DB0796C2788D79400D5A427 /* AppDelegate.swift in Sources */,
 				4DFCC81927A1458F00A73FFF /* NoteViewController.swift in Sources */,

@@ -10,44 +10,35 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="ChipTableViewCell" customModule="newsReader" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="400" id="KGk-i7-Jjw" customClass="ChipTableViewCell" customModule="newsReader" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I9p-dd-nSR">
-                        <rect key="frame" x="5" y="1" width="42.5" height="42"/>
-                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="AGi-bW-jym"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                        <color key="textColor" systemColor="secondarySystemBackgroundColor"/>
-                        <color key="highlightedColor" systemColor="secondarySystemBackgroundColor"/>
-                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pJi-XF-Wli">
+                        <rect key="frame" x="70" y="61" width="260" height="278"/>
+                        <color key="backgroundColor" systemColor="systemGreenColor"/>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="I9p-dd-nSR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="Dvf-4S-u8Z"/>
-                    <constraint firstAttribute="bottom" secondItem="I9p-dd-nSR" secondAttribute="bottom" constant="1" id="S1O-DV-biJ"/>
-                    <constraint firstItem="I9p-dd-nSR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="1" id="cOc-Ef-34e"/>
+                    <constraint firstItem="pJi-XF-Wli" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="50" id="4BP-Vn-wHZ"/>
+                    <constraint firstItem="pJi-XF-Wli" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="50" id="Q39-Tu-bhA"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="pJi-XF-Wli" secondAttribute="trailing" constant="50" id="sAP-Nj-xbq"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="pJi-XF-Wli" secondAttribute="bottom" constant="50" id="uQb-DT-qD1"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="chipLabel" destination="I9p-dd-nSR" id="3Sn-2m-3oz"/>
                 <outlet property="messageBackgroundView" destination="H2p-sc-9uM" id="w2H-20-WDe"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="79.6875"/>
         </tableViewCell>
     </objects>
     <resources>
-        <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

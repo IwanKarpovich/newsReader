@@ -13,8 +13,9 @@ import Firebase
 class NewsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var timer: Timer?
     
+    var lengthsArray: Int = 0
     var userNames = ""
-    var name = "online"
+    var name = "offline"
     var typeOfFunc = "top"
     var categoryName: String = "none"
     var searchByCountry: String = ""
@@ -51,23 +52,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    fileprivate func addArticleToMarkersList(_ querySnapshot: QuerySnapshot?) {
-        for document in querySnapshot!.documents {
-            let headline = document.get("headline") as! String
-            let desc = document.get("desc") as! String
-            let author = document.get("author") as? String
-            let url = document.get("url") as! String
-            let imageUrl = document.get("imageUrl") as! String
-            
-            let article = Article()
-            article.author = author
-            article.desc = desc
-            article.headline = headline
-            article.url = url
-            article.imageUrl = imageUrl
-            self.markerArticles?.append(article)
-        }
-    }
+
     
     override func viewWillAppear( _ animated: Bool) {
         super.viewWillAppear(animated)
@@ -111,11 +96,11 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         wordSearch = search(search: wordSearch)
         settingsTableArray = [typeOfFunc, categoryName , searchByCountry, wordSearch,sourcesName]
         settingsTableArray = settingsTableArray.filter(){$0 != "none"}
-        
+
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "NewsTableViewCell", bundle: nil), forCellReuseIdentifier: "NewsTableViewCell")
-        tableView.register(UINib(nibName: "ChipTableViewCell", bundle: nil), forCellReuseIdentifier: "ChipTableViewCell")
+        tableView.register(UINib(nibName: "BadTableViewCell", bundle: nil), forCellReuseIdentifier: "BadTableViewCell")
 
         self.collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
         self.collectionView.dataSource = self
@@ -123,6 +108,24 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         typeOfInternet(name: name)
         
         monitNetwork()
+    }
+    
+    fileprivate func addArticleToMarkersList(_ querySnapshot: QuerySnapshot?) {
+        for document in querySnapshot!.documents {
+            let headline = document.get("headline") as! String
+            let desc = document.get("desc") as! String
+            let author = document.get("author") as? String
+            let url = document.get("url") as! String
+            let imageUrl = document.get("imageUrl") as! String
+            
+            let article = Article()
+            article.author = author
+            article.desc = desc
+            article.headline = headline
+            article.url = url
+            article.imageUrl = imageUrl
+            self.markerArticles?.append(article)
+        }
     }
     
     func typeOfInternet(name: String){
@@ -189,7 +192,10 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         secondViewController.sourcesName = sourcesName
         secondViewController.userNames = userNames
         
-        show(secondViewController, sender: nil)
+       // show(secondViewController, sender: nil)
+        navigationController?.pushViewController(secondViewController, animated: true)
+     
+       // present(secondViewController, animated: true)
     }
         
     
@@ -269,7 +275,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         if type == "top" {
             let lastCategoryName = newCountry+newcategoryName+newSourceName
             
-            urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+            urlstring = "https://newsapi.org/v2/top-headlines?" + newSearchName + lastCategoryName + "pageSize=100&apiKey=0d86c989d6a64f0693508f45a227d8a8"
             
             
         }
@@ -277,7 +283,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
 //            if newSearchName == "" {
 //                newSearchName = "q=bitcoin"
 //            }
-            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + newSourceName + "apiKey=7da15afd85a443ab8a7e06ce2778bcc5"
+            urlstring = "https://newsapi.org/v2/everything?" + newSearchName + newSourceName + "pageSize=100&apiKey=0d86c989d6a64f0693508f45a227d8a8"
             
         }
         
@@ -296,7 +302,12 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return 0 //settingsTableArray.count//typeSettings.count
+            if articlesState.articles.count == 0{
+            return 1 //settingsTableArray.count//typeSettings.count
+            }
+            else{
+            return 0
+            }
         }
         else {
             return articlesState.articles.count
@@ -320,18 +331,19 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         else {
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ChipTableViewCell", for: indexPath) as! ChipTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "BadTableViewCell", for: indexPath) as! BadTableViewCell
             
-            let imageAttachment = NSTextAttachment()
-            imageAttachment.image = UIImage(systemName: "x.circle")
-
-            // If you want to enable Color in the SF Symbols.
-
-            let fullString = NSMutableAttributedString(string: "  \(settingsTableArray[indexPath.row]) NEWS ")
-            fullString.append(NSAttributedString(attachment: imageAttachment))
-            fullString.append(NSAttributedString(string: "  "))
-            
-            cell.chipLabel.attributedText = fullString
+            cell.textBadeLabel.text = "No results found"
+//            let imageAttachment = NSTextAttachment()
+//            imageAttachment.image = UIImage(systemName: "x.circle")
+//
+//            // If you want to enable Color in the SF Symbols.
+//
+//            let fullString = NSMutableAttributedString(string: "  \(settingsTableArray[indexPath.row]) NEWS ")
+//            fullString.append(NSAttributedString(attachment: imageAttachment))
+//            fullString.append(NSAttributedString(string: "  "))
+//
+//            cell.chipLabel.attributedText = fullString
             
             
             
@@ -421,7 +433,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         var height: CGFloat = 205.0
         if indexPath.section  == 0 {
-            height = 20
+            height = 800
+            
         }
         return height
         

@@ -9,14 +9,16 @@ import UIKit
 
 class ChipTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var messageBackgroundView: UIView!
-    @IBOutlet weak var chipLabel: UILabel!
+    @IBOutlet weak var imageSmile: UIImageView!
+//    @IBOutlet weak var messageBackgroundView: UIView!
+//    @IBOutlet weak var chipLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        chipLabel.layer.masksToBounds = true
-        chipLabel.layer.cornerRadius = 8
+//        chipLabel.layer.masksToBounds = true
+//        chipLabel.layer.cornerRadius = 8
+//
+//        chipLabel.backgroundColor = .systemGray
 
-        chipLabel.backgroundColor = .systemGray
         // Initialization code
     }
 

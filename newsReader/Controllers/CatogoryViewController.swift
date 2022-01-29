@@ -16,7 +16,8 @@ class CatogoryViewController: UIViewController {
     var searchByCountry: String = ""
     var wordSearch: String = ""
     var sourcesName: String = ""
-    
+    var markerArticles: [Article]? = []
+    var userNames: String = ""
     
     
     var categoryArray: [String] = ["business","entertainment", "general","health","science","sports","technology","none"]
@@ -38,7 +39,9 @@ class CatogoryViewController: UIViewController {
         secondViewController.searchByCountry = searchByCountry
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
+        secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
+        secondViewController.userNames = userNames
         
         show(secondViewController, sender: nil)
         

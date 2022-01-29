@@ -62,6 +62,7 @@ class MarkerViewController: UIViewController {
         secondViewController.wordSearch = wordSearch
         secondViewController.markerArticles = markerArticles
         secondViewController.sourcesName = sourcesName
+        secondViewController.userNames = userNames
         show(secondViewController, sender: nil)
     }
     
@@ -131,6 +132,7 @@ extension MarkerViewController: UITableViewDelegate {
                 ]))
                 noteHeadline[indexPath.row] = " "
             }
+            
             
    
         }

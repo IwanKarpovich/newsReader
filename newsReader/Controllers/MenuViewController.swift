@@ -22,7 +22,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     var sourcesName: String = ""
     var userNames: String = ""
     
-    var settingTypes: [String] = ["top","category","country","marker","sources","signout","voice"]
+    var settingTypes: [String] = ["top","category","country","sources","marker","signout"]
     var settingsTableArray: [String] = []
     var markerArticles: [Article]? = []
     
@@ -30,10 +30,14 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if(wordSearch == "none" || wordSearch == "") && ( sourcesName == "none" || sourcesName == "" ) {
-            settingTypes.remove(at: 0)
+        //        if(wordSearch == "none" || wordSearch == "") && ( sourcesName == "none" || sourcesName == "" ) {
+        //            settingTypes.remove(at: 0)
+        //        }
+        
+        if typeOfFunc == "none"{
+            settingTypes.remove(at: 1)
+            settingTypes.remove(at: 1)
         }
-
         
         
         tableView.dataSource = self
@@ -46,17 +50,26 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
             searcByText.text = wordSearch
         }
     }
+    @IBAction func deleteSearchName(_ sender: Any) {
+        wordSearch = "none"
+        searcByText.text = ""
+        searcByText.reloadInputViews()
+    }
     
     @IBAction func goToNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-        
+        if typeOfFunc == "none"{
+            searchByCountry = "none"
+            categoryName = "none"
+        }
         secondViewController.searchByCountry = searchByCountry
         secondViewController.name = name
         secondViewController.typeOfFunc = typeOfFunc
         secondViewController.categoryName = categoryName
         secondViewController.wordSearch = wordSearch
         secondViewController.sourcesName = sourcesName
+        
         show(secondViewController, sender: nil)
     }
     
@@ -64,7 +77,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         nextView+=1
-    #if DEBUG
+#if DEBUG
         if nextView == 5 {
             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
             if name == "online" {
@@ -103,7 +116,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
 
 extension MenuViewController: UITableViewDelegate {
     func tableView (_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if settingTypes[indexPath.row] == "category" {
+        if settingTypes[indexPath.row + 1] == "category" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "category") as? CatogoryViewController else { return }
             secondViewController.name = name
@@ -111,10 +124,12 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.searchByCountry = searchByCountry
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
+            secondViewController.userNames = userNames
             show(secondViewController, sender: nil)
         }
-        if settingTypes[indexPath.row] == "country" {
+        if settingTypes[indexPath.row + 1] == "country" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "country") as? CountryViewController else { return }
             secondViewController.name = name
@@ -122,11 +137,13 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.searchByCountry = searchByCountry
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
+            secondViewController.userNames = userNames
             show(secondViewController, sender: nil)
         }
         
-        if settingTypes[indexPath.row] == "marker" {
+        if settingTypes[indexPath.row + 1] == "marker" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "marker") as? MarkerViewController else { return }
             secondViewController.name = name
@@ -137,25 +154,25 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
             secondViewController.userNames = userNames
-
+            
             show(secondViewController, sender: nil)
         }
-        if settingTypes[indexPath.row] == "voice" {
+        if settingTypes[indexPath.row + 1] == "voice" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "voice") as? VoiceViewController else { return }
-//            secondViewController.name = name
-//            secondViewController.typeOfFunc = typeOfFunc
-//            secondViewController.searchByCountry = searchByCountry
-//            secondViewController.categoryName = categoryName
-//            secondViewController.wordSearch = wordSearch
-//            secondViewController.markerArticles = markerArticles
-//            secondViewController.sourcesName = sourcesName
-//            secondViewController.nameUsers = nameUsers
-
+            //            secondViewController.name = name
+            //            secondViewController.typeOfFunc = typeOfFunc
+            //            secondViewController.searchByCountry = searchByCountry
+            //            secondViewController.categoryName = categoryName
+            //            secondViewController.wordSearch = wordSearch
+            //            secondViewController.markerArticles = markerArticles
+            //            secondViewController.sourcesName = sourcesName
+            //            secondViewController.nameUsers = nameUsers
+            
             show(secondViewController, sender: nil)
         }
         
-        if settingTypes[indexPath.row] == "sources" {
+        if settingTypes[indexPath.row + 1] == "sources" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "sources") as? SourcesViewController else { return }
             secondViewController.name = name
@@ -163,11 +180,14 @@ extension MenuViewController: UITableViewDelegate {
             secondViewController.searchByCountry = searchByCountry
             secondViewController.categoryName = categoryName
             secondViewController.wordSearch = wordSearch
+            secondViewController.markerArticles = markerArticles
             secondViewController.sourcesName = sourcesName
+            secondViewController.userNames = userNames
+            
             show(secondViewController, sender: nil)
         }
         
-        if settingTypes[indexPath.row] == "signout" {
+        if settingTypes[indexPath.row + 1] == "signout" {
             
             do {
                 try Auth.auth().signOut()
@@ -187,61 +207,113 @@ extension MenuViewController: UITableViewDelegate {
 
 extension MenuViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingTypes.count
+        if section == 0{
+            return 1
+        } else{
+            return settingTypes.count - 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         
-        if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        }
-        
-        if settingTypes[indexPath.row] == "textfield" {
+        if indexPath.section == 0 {
+            var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
             
-        }
-        
-        cell?.textLabel!.text = settingTypes[indexPath.row]
-        if settingTypes[indexPath.row] == "top" {
-            let switchView = UISwitch(frame: .zero)
-            if typeOfFunc == "top" {
-                switchView.setOn(true, animated: true)
+            if cell == nil {
+                cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             }
-            else{
-                switchView.setOn(false, animated: true)
+            
+            if settingTypes[indexPath.row] == "textfield" {
+                
             }
-            switchView.tag = indexPath.row
-            switchView.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
             
-            cell?.accessoryView = switchView
+            cell?.textLabel!.text = settingTypes[indexPath.row]
             
+            
+            if settingTypes[indexPath.row] == "top" {
+                let switchView = UISwitch(frame: .zero)
+                if typeOfFunc == "top" {
+                    switchView.setOn(true, animated: true)
+                }
+                else{
+                    switchView.setOn(false, animated: true)
+                }
+                //switchView.tag = indexPath.row
+                switchView.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
+                
+                cell?.accessoryView = switchView
+                
+            }
+            return cell!
         }
-        return cell!
+        else{
+            var cell = tableView.dequeueReusableCell(withIdentifier: "twocell")
+            
+            if cell == nil {
+                cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+            }
+            
+
+            
+            cell?.textLabel!.text = settingTypes[indexPath.row + 1]
+            
+            
+            //            if settingTypes[indexPath.row] == "top" {
+            //                let switchView = UISwitch(frame: .zero)
+            //                if typeOfFunc == "top" {
+            //                    switchView.setOn(true, animated: true)
+            //                }
+            //                else{
+            //                    switchView.setOn(false, animated: true)
+            //                }
+            //                switchView.tag = indexPath.row
+            //                switchView.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
+            //
+            //                cell?.accessoryView = switchView
+            //
+            //            }
+            return cell!
+        }
     }
     
     
     @objc func switchChanged(_ sender: UISwitch!){
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
+        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
         if sender.isOn {
-            secondViewController.typeOfFunc = "top"
+            typeOfFunc = "top"
+            
+            if typeOfFunc == "top"{
+                settingTypes.insert("category", at: 1)
+                settingTypes.insert("country", at: 1)
+                
+            }
         }
         else{
-            secondViewController.typeOfFunc = "none"
+            typeOfFunc = "none"
+            if typeOfFunc == "none"{
+                settingTypes.remove(at: 1)
+                settingTypes.remove(at: 1)
+            }
         }
+        //        if wordSearch == "none" {
+        //            typeOfFunc = "top"
+        //        }
         
-        secondViewController.name = name
-        secondViewController.categoryName = categoryName
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.wordSearch = wordSearch
-        secondViewController.markerArticles = markerArticles
-        secondViewController.sourcesName = sourcesName
-        show(secondViewController, sender: nil)
+        //        secondViewController.name = name
+        //        secondViewController.categoryName = categoryName
+        //        secondViewController.searchByCountry = searchByCountry
+        //        secondViewController.wordSearch = wordSearch
+        //        secondViewController.markerArticles = markerArticles
+        //        secondViewController.sourcesName = sourcesName
+        //        show(secondViewController, sender: nil)
+        
+        tableView.reloadData()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
 }
 

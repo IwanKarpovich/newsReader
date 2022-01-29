@@ -29,14 +29,30 @@ class ArticlesState {
                 for articlesFromJson in articlesFromJson{
                     let article = Article()
                     let title = articlesFromJson["title"] as? String
-                    let author = articlesFromJson["author"] as? String
+                    let author = articlesFromJson["publishedAt"] as? String
                     let desc = articlesFromJson["description"] as? String
                     let url = articlesFromJson["url"] as? String
                     let urlToImage = articlesFromJson["urlToImage"] as? String
                     
+              
+                   
+
+                    let dateFormatter = ISO8601DateFormatter()
+                    var date = dateFormatter.date(from:author!)
                     
+                    let dateFormatter2 = DateFormatter()
+
+                    // Set Date Format
+                    dateFormatter2.dateFormat = "dd.MM.y, HH:mm:ss "
+
+                    // Convert Date to String
                     
-                    article.author = author
+                    if let date = date{
+                        article.author = dateFormatter2.string(from: date)
+                        
+                    }else{
+                        article.author = ""
+                    }
                     article.desc = desc
                     article.headline = title
                     article.url = url
@@ -60,9 +76,9 @@ class ArticlesState {
         }
     }
     
-    func requestArticle(urlstring:String ,  onSuccess: @escaping()->Void ){
+    func requestArticle(urlstring:String ,  onSuccess: @escaping ()->Void ){
         
-        let urlRequest = URLRequest(url: URL(string: urlstring)!)
+        let urlRequest = URLRequest(url: URL(string: urlstring.encodeUrl)!)
         
         let task = URLSession.shared.dataTask(with: urlRequest){
             (data,response,error) in
@@ -83,7 +99,16 @@ class ArticlesState {
     
 }
 
-
+extension String{
+    var encodeUrl : String
+    {
+        return self.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+    }
+    var decodeUrl : String
+    {
+        return self.removingPercentEncoding!
+    }
+}
 
 
 
