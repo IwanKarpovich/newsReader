@@ -26,13 +26,13 @@ class ArticlesState {
         do{
             let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String: AnyObject]
             if let articlesFromJson = json["articles"] as? [[String:AnyObject]] {
-                for articlesFromJson in articlesFromJson{
+                for articleFromJson in articlesFromJson{
                     let article = Article()
-                    let title = articlesFromJson["title"] as? String
-                    let author = articlesFromJson["publishedAt"] as? String
-                    let desc = articlesFromJson["description"] as? String
-                    let url = articlesFromJson["url"] as? String
-                    let urlToImage = articlesFromJson["urlToImage"] as? String
+                    let title = articleFromJson["title"] as? String
+                    let author = articleFromJson["publishedAt"] as? String
+                    let desc = articleFromJson["description"] as? String
+                    let url = articleFromJson["url"] as? String
+                    let urlToImage = articleFromJson["urlToImage"] as? String
                     
               
                    
@@ -114,3 +114,18 @@ extension String{
 
 var articlesState =  ArticlesState()
 
+
+class NextView {
+    var userNames = ""
+    var name = "online"
+    var typeOfFunc = "top"
+    var categoryName: String = "none"
+    var searchByCountry: String = ""
+    var wordSearch: String = "none"
+    var selectedArticle: Article?
+    var sourcesName: String = "none"
+    var markerArticles: [Article]? = []
+    var url: String?
+}
+
+var nextView = NextView()

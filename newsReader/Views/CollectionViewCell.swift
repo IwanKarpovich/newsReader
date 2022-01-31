@@ -12,6 +12,9 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var textLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+
+        
         // Initialization code
         textLabel.layer.masksToBounds = true
         textLabel.layer.cornerRadius = 14
@@ -20,6 +23,13 @@ class CollectionViewCell: UICollectionViewCell {
         
         //textLabel.backgroundColor = .systemGray
         // Initialization code
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        textLabel.text = nil
+        
+       
     }
 
 }

@@ -10,25 +10,25 @@ import Firebase
 
 class NoteViewController: UIViewController {
     var numberIndex: IndexPath = []
-    var categoryName: String = ""
-    var typeOfFunc = ""
-    var name: String = ""
-    var searchByCountry: String = ""
-    var wordSearch: String = ""
-    var markerArticles: [Article]? = []
-    var selectedArticle: Article?
-    var sourcesName: String = ""
-    var userNames: String = ""
+//    var categoryName: String = ""
+//    var typeOfFunc = ""
+//    var name: String = ""
+//    var searchByCountry: String = ""
+//    var wordSearch: String = ""
+//    var markerArticles: [Article]? = []
+//    var selectedArticle: Article?
+//    var sourcesName: String = ""
+//    var userNames: String = ""
     @IBOutlet weak var textView: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let db = Firestore.firestore()
-        let userMarkers = db.collection("users").document(userNames).collection("markers")
-        let selectedArticleUrl = selectedArticle!.url
-        let selectedArticleHeadline = selectedArticle!.headline
+        let userMarkers = db.collection("users").document(nextView.userNames).collection("markers")
+        let selectedArticleUrl = nextView.selectedArticle!.url
+        let selectedArticleHeadline = nextView.selectedArticle!.headline
         var note: String = " "
-        let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
+        let articleIndex = (nextView.markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
         if let articleIndex = articleIndex
         {
             let wf =  userMarkers.document("marker\(selectedArticleHeadline ?? "")")
@@ -58,22 +58,22 @@ class NoteViewController: UIViewController {
     @IBAction func goToMarker(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "marker") as? MarkerViewController else { return }
-        secondViewController.name = name
-        secondViewController.typeOfFunc = typeOfFunc
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.categoryName = categoryName
-        secondViewController.wordSearch = wordSearch
-        secondViewController.markerArticles = markerArticles
-        secondViewController.sourcesName = sourcesName
-        secondViewController.userNames = userNames
+//        secondViewController.name = name
+//        secondViewController.typeOfFunc = typeOfFunc
+//        secondViewController.searchByCountry = searchByCountry
+//        secondViewController.categoryName = categoryName
+//        secondViewController.wordSearch = wordSearch
+//        secondViewController.markerArticles = markerArticles
+//        secondViewController.sourcesName = sourcesName
+//        secondViewController.userNames = userNames
         let text = textView.text
         
         let db = Firestore.firestore()
-        let washingtonRef = db.collection("users").document(userNames).collection("markers")
-        let selectedArticleUrl = selectedArticle!.url
-        let selectedArticleHeadline = selectedArticle!.headline
+        let washingtonRef = db.collection("users").document(nextView.userNames).collection("markers")
+        let selectedArticleUrl = nextView.selectedArticle!.url
+        let selectedArticleHeadline = nextView.selectedArticle!.headline
 
-        let articleIndex = (markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
+        let articleIndex = (nextView.markerArticles?.firstIndex(where: { $0.url == selectedArticleUrl }))
         if let articleIndex = articleIndex
         {
             washingtonRef.document("marker\(selectedArticleHeadline ?? "")").updateData(([
@@ -81,7 +81,9 @@ class NoteViewController: UIViewController {
             ]))
         }
         print(text)
-        show(secondViewController, sender: nil)
+        navigationController?.popViewController(animated: true)
+
+//        show(secondViewController, sender: nil)
     }
     
     

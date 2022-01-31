@@ -13,18 +13,18 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var searcByText: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-    var nextView = 0
-    var typeOfFunc = ""
-    var name: String = ""
-    var searchByCountry: String = ""
-    var categoryName: String = ""
-    var wordSearch: String = ""
-    var sourcesName: String = ""
-    var userNames: String = ""
+     var mbnextView = 0
+//    var typeOfFunc = ""
+//    var name: String = ""
+//    var searchByCountry: String = ""
+//    var categoryName: String = ""
+//    var wordSearch: String = ""
+//    var sourcesName: String = ""
+//    var userNames: String = ""
     
     var settingTypes: [String] = ["top","category","country","sources","marker","signout"]
     var settingsTableArray: [String] = []
-    var markerArticles: [Article]? = []
+//    var markerArticles: [Article]? = []
     
     
     override func viewDidLoad() {
@@ -34,7 +34,7 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         //            settingTypes.remove(at: 0)
         //        }
         
-        if typeOfFunc == "none"{
+        if nextView.typeOfFunc == "none"{
             settingTypes.remove(at: 1)
             settingTypes.remove(at: 1)
         }
@@ -43,15 +43,15 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
         tableView.dataSource = self
         tableView.delegate = self
         searcByText.delegate = self
-        if wordSearch == "none"{
+        if nextView.wordSearch == "none"{
             searcByText.text = ""
         }
         else{
-            searcByText.text = wordSearch
+            searcByText.text = nextView.wordSearch
         }
     }
     @IBAction func deleteSearchName(_ sender: Any) {
-        wordSearch = "none"
+        nextView.wordSearch = "none"
         searcByText.text = ""
         searcByText.reloadInputViews()
     }
@@ -59,39 +59,43 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     @IBAction func goToNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-        if typeOfFunc == "none"{
-            searchByCountry = "none"
-            categoryName = "none"
+        if nextView.typeOfFunc == "none"{
+            nextView.searchByCountry = "none"
+            nextView.categoryName = "none"
         }
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.name = name
-        secondViewController.typeOfFunc = typeOfFunc
-        secondViewController.categoryName = categoryName
-        secondViewController.wordSearch = wordSearch
-        secondViewController.sourcesName = sourcesName
-        
-        show(secondViewController, sender: nil)
+//        secondViewController.searchByCountry = searchByCountry
+//        secondViewController.name = name
+//        secondViewController.typeOfFunc = typeOfFunc
+//        secondViewController.categoryName = categoryName
+//        secondViewController.wordSearch = wordSearch
+//        secondViewController.sourcesName = sourcesName
+        navigationController?.popViewController(animated: true)
+
+       // navigationController?.pushViewController(secondViewController, animated: true)
+
+       // show(secondViewController, sender: nil)
     }
     
     @IBAction func secretButton(_ sender: Any) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        nextView+=1
+        mbnextView+=1
 #if DEBUG
-        if nextView == 5 {
+        if mbnextView == 5 {
             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-            if name == "online" {
-                secondViewController.name = "offline"
+            if nextView.name == "online" {
+                nextView.name = "offline"
             }
             else {
-                secondViewController.name = "online"
+                nextView.name = "online"
             }
-            secondViewController.searchByCountry = searchByCountry
-            secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.categoryName = categoryName
-            secondViewController.wordSearch = wordSearch
-            secondViewController.markerArticles = markerArticles
-            secondViewController.sourcesName = sourcesName
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+            //navigationController?.popViewController(animated: true)
             show(secondViewController, sender: nil)
         }
 #endif
@@ -100,15 +104,17 @@ class MenuViewController: UIViewController, UITextFieldDelegate {
     @IBAction func goToSearchNews(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        wordSearch = searcByText.text!
+        nextView.wordSearch = searcByText.text!
         guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-        secondViewController.name = name
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.typeOfFunc = typeOfFunc
-        secondViewController.categoryName = categoryName
-        secondViewController.wordSearch = wordSearch
-        secondViewController.sourcesName = sourcesName
-        show(secondViewController, sender: nil)
+//        secondViewController.name = name
+//        secondViewController.searchByCountry = searchByCountry
+//        secondViewController.typeOfFunc = typeOfFunc
+//        secondViewController.categoryName = categoryName
+//        secondViewController.wordSearch = wordSearch
+//        secondViewController.sourcesName = sourcesName
+        navigationController?.popViewController(animated: true)
+
+        //show(secondViewController, sender: nil)
         
     }
     
@@ -119,43 +125,48 @@ extension MenuViewController: UITableViewDelegate {
         if settingTypes[indexPath.row + 1] == "category" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "category") as? CatogoryViewController else { return }
-            secondViewController.name = name
-            secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.searchByCountry = searchByCountry
-            secondViewController.categoryName = categoryName
-            secondViewController.wordSearch = wordSearch
-            secondViewController.markerArticles = markerArticles
-            secondViewController.sourcesName = sourcesName
-            secondViewController.userNames = userNames
-            show(secondViewController, sender: nil)
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+//            secondViewController.userNames = userNames
+            navigationController?.pushViewController(secondViewController, animated: true)
+
+            //   show(secondViewController, sender: nil)
         }
         if settingTypes[indexPath.row + 1] == "country" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "country") as? CountryViewController else { return }
-            secondViewController.name = name
-            secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.searchByCountry = searchByCountry
-            secondViewController.categoryName = categoryName
-            secondViewController.wordSearch = wordSearch
-            secondViewController.markerArticles = markerArticles
-            secondViewController.sourcesName = sourcesName
-            secondViewController.userNames = userNames
-            show(secondViewController, sender: nil)
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+//            secondViewController.userNames = userNames
+            navigationController?.pushViewController(secondViewController, animated: true)
+
+            //  show(secondViewController, sender: nil)
         }
         
         if settingTypes[indexPath.row + 1] == "marker" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "marker") as? MarkerViewController else { return }
-            secondViewController.name = name
-            secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.searchByCountry = searchByCountry
-            secondViewController.categoryName = categoryName
-            secondViewController.wordSearch = wordSearch
-            secondViewController.markerArticles = markerArticles
-            secondViewController.sourcesName = sourcesName
-            secondViewController.userNames = userNames
-            
-            show(secondViewController, sender: nil)
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+//            secondViewController.userNames = userNames
+            navigationController?.pushViewController(secondViewController, animated: true)
+
+           // show(secondViewController, sender: nil)
         }
         if settingTypes[indexPath.row + 1] == "voice" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -168,23 +179,25 @@ extension MenuViewController: UITableViewDelegate {
             //            secondViewController.markerArticles = markerArticles
             //            secondViewController.sourcesName = sourcesName
             //            secondViewController.nameUsers = nameUsers
-            
-            show(secondViewController, sender: nil)
+            navigationController?.pushViewController(secondViewController, animated: true)
+
+            //show(secondViewController, sender: nil)
         }
         
         if settingTypes[indexPath.row + 1] == "sources" {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "sources") as? SourcesViewController else { return }
-            secondViewController.name = name
-            secondViewController.typeOfFunc = typeOfFunc
-            secondViewController.searchByCountry = searchByCountry
-            secondViewController.categoryName = categoryName
-            secondViewController.wordSearch = wordSearch
-            secondViewController.markerArticles = markerArticles
-            secondViewController.sourcesName = sourcesName
-            secondViewController.userNames = userNames
-            
-            show(secondViewController, sender: nil)
+//            secondViewController.name = name
+//            secondViewController.typeOfFunc = typeOfFunc
+//            secondViewController.searchByCountry = searchByCountry
+//            secondViewController.categoryName = categoryName
+//            secondViewController.wordSearch = wordSearch
+//            secondViewController.markerArticles = markerArticles
+//            secondViewController.sourcesName = sourcesName
+//            secondViewController.userNames = userNames
+            navigationController?.pushViewController(secondViewController, animated: true)
+
+          //  show(secondViewController, sender: nil)
         }
         
         if settingTypes[indexPath.row + 1] == "signout" {
@@ -197,7 +210,7 @@ extension MenuViewController: UITableViewDelegate {
             }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-            
+            nextView.markerArticles = []
             self.show(secondViewController, sender: nil)
         }
         
@@ -232,7 +245,7 @@ extension MenuViewController: UITableViewDataSource {
             
             if settingTypes[indexPath.row] == "top" {
                 let switchView = UISwitch(frame: .zero)
-                if typeOfFunc == "top" {
+                if nextView.typeOfFunc == "top" {
                     switchView.setOn(true, animated: true)
                 }
                 else{
@@ -282,17 +295,17 @@ extension MenuViewController: UITableViewDataSource {
         //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         //        guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
         if sender.isOn {
-            typeOfFunc = "top"
+            nextView.typeOfFunc = "top"
             
-            if typeOfFunc == "top"{
+            if nextView.typeOfFunc == "top"{
                 settingTypes.insert("category", at: 1)
                 settingTypes.insert("country", at: 1)
                 
             }
         }
         else{
-            typeOfFunc = "none"
-            if typeOfFunc == "none"{
+            nextView.typeOfFunc = "none"
+            if nextView.typeOfFunc == "none"{
                 settingTypes.remove(at: 1)
                 settingTypes.remove(at: 1)
             }
@@ -309,8 +322,18 @@ extension MenuViewController: UITableViewDataSource {
         //        secondViewController.sourcesName = sourcesName
         //        show(secondViewController, sender: nil)
         
+       // deleteData(indexPath: [0,1])
         tableView.reloadData()
     }
+    
+    func deleteData(indexPath: IndexPath) {
+           
+           tableView.deleteRows(at: [indexPath], with: .fade)
+        tableView.reloadData()
+
+
+   }
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2

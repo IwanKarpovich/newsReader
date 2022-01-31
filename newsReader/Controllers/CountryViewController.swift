@@ -10,20 +10,20 @@ import UIKit
 class CountryViewController: UIViewController {
     var checkIndex: Int = 1
     var numberIndex: IndexPath = []
-    var categoryName: String = ""
-    var wordSearch: String = ""
-    var sourcesName: String = ""
-    var markerArticles: [Article]? = []
-    var userNames: String = ""
+//    var categoryName: String = ""
+//    var wordSearch: String = ""
+//    var sourcesName: String = ""
+//    var markerArticles: [Article]? = []
+//    var userNames: String = ""
 
     
     
     
     var countryArray: [String] =  ["AE","AR","AT","AU","BE","BG","BR","CA","CH","CN","CO","CU","CZ","DE","EG","FR","GB","GR","HK","HU","ID","IE","IL","IN","IT","JP","KR","LT","LV","MA","MX","MY","NG","NL","NO","NZ","PH","PL","PT","RO","RS","RU","SA","SE","SG","SI","SK","TH","TR","TW","UA","US","VE","ZA","none"]
     
-    var typeOfFunc = ""
-    var name: String = ""
-    var searchByCountry: String = ""
+//    var typeOfFunc = ""
+//    var name: String = ""
+//    var searchByCountry: String = ""
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -38,16 +38,17 @@ class CountryViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "menu") as? MenuViewController else { return }
         
-        secondViewController.name = name
-        secondViewController.typeOfFunc = typeOfFunc
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.categoryName = categoryName
-        secondViewController.wordSearch = wordSearch
-        secondViewController.markerArticles = markerArticles
-        secondViewController.sourcesName = sourcesName
-        secondViewController.userNames = userNames
-        
-        show(secondViewController, sender: nil)
+//        secondViewController.name = name
+//        secondViewController.typeOfFunc = typeOfFunc
+//        secondViewController.searchByCountry = searchByCountry
+//        secondViewController.categoryName = categoryName
+//        secondViewController.wordSearch = wordSearch
+//        secondViewController.markerArticles = markerArticles
+//        secondViewController.sourcesName = sourcesName
+//        secondViewController.userNames = userNames
+        navigationController?.popViewController(animated: true)
+
+       // show(secondViewController, sender: nil)
     }
     
 }
@@ -62,7 +63,7 @@ extension CountryViewController: UITableViewDelegate {
             tableView.cellForRow(at: indexPath as IndexPath)?.accessoryType = .checkmark
             checkIndex += 1
             numberIndex = indexPath
-            searchByCountry = countryArray[indexPath.row]
+            nextView.searchByCountry = countryArray[indexPath.row]
         }
         
         tableView.reloadData()
@@ -81,7 +82,7 @@ extension CountryViewController: UITableViewDataSource {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "indexPath")
         
 
-        if countryArray[indexPath.row] == searchByCountry {
+        if countryArray[indexPath.row] == nextView.searchByCountry {
             cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             numberIndex = indexPath
             

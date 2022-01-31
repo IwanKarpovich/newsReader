@@ -33,7 +33,7 @@ class WelcomeViewController: UIViewController {
             
             let label = UILabel(frame: CGRect(x: 10, y: 10, width: pageView.frame.size.width - 20, height: 120))
             let imageView = UIImageView(frame: CGRect(x: 10, y: 10 + 120 + 10, width: pageView.frame.size.width - 20, height: pageView.frame.size.height - 60 - 130 - 15))
-            let button = UIButton(frame: CGRect(x: 10, y: pageView.frame.size.height-60 , width: pageView.frame.size.width - 20, height: 25))
+            let button = UIButton(frame: CGRect(x: 10, y: pageView.frame.size.height-60 , width: pageView.frame.size.width - 20, height: 50))
             
             
             label.textAlignment = .center

@@ -10,17 +10,17 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="CollectionViewCell" customModule="newsReader" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="285" height="40"/>
+            <rect key="frame" x="0.0" y="0.0" width="436" height="40"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="285" height="40"/>
+                <rect key="frame" x="0.0" y="0.0" width="436" height="40"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nvR-u2-f8B">
-                        <rect key="frame" x="15" y="6" width="270" height="28"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nvR-u2-f8B">
+                        <rect key="frame" x="15" y="6" width="50" height="28"/>
                         <constraints>
-                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="280" id="S6Y-II-uJl"/>
-                            <constraint firstAttribute="height" constant="28" id="oTX-Uq-iq8"/>
+                            <constraint firstAttribute="height" constant="28" id="8mJ-7I-AGn"/>
+                            <constraint firstAttribute="width" constant="50" id="afm-H7-FaJ"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="highlightedColor"/>
@@ -34,11 +34,11 @@
                 <constraint firstItem="nvR-u2-f8B" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="15" id="O0D-D7-1gD"/>
                 <constraint firstItem="nvR-u2-f8B" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="6" id="vgB-MZ-7Xj"/>
             </constraints>
-            <size key="customSize" width="35" height="177"/>
+            <size key="customSize" width="186" height="177"/>
             <connections>
                 <outlet property="textLabel" destination="nvR-u2-f8B" id="KVs-V1-87e"/>
             </connections>
-            <point key="canvasLocation" x="207.97101449275365" y="120.53571428571428"/>
+            <point key="canvasLocation" x="317.39130434782612" y="120.53571428571428"/>
         </collectionViewCell>
     </objects>
 </document>

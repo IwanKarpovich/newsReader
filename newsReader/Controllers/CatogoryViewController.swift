@@ -9,15 +9,15 @@ import UIKit
 
 class CatogoryViewController: UIViewController {
     var checkIndex: Int = 1
-    var numberIndex: IndexPath = []
-    var categoryName: String = ""
-    var typeOfFunc = ""
-    var name: String = ""
-    var searchByCountry: String = ""
-    var wordSearch: String = ""
-    var sourcesName: String = ""
-    var markerArticles: [Article]? = []
-    var userNames: String = ""
+   var numberIndex: IndexPath = []
+//    var categoryName: String = ""
+//    var typeOfFunc = ""
+//    var name: String = ""
+//    var searchByCountry: String = ""
+//    var wordSearch: String = ""
+//    var sourcesName: String = ""
+//    var markerArticles: [Article]? = []
+//    var userNames: String = ""
     
     
     var categoryArray: [String] = ["business","entertainment", "general","health","science","sports","technology","none"]
@@ -34,16 +34,17 @@ class CatogoryViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let secondViewController = storyboard.instantiateViewController(identifier: "menu") as? MenuViewController else { return }
         
-        secondViewController.name = name
-        secondViewController.typeOfFunc = typeOfFunc
-        secondViewController.searchByCountry = searchByCountry
-        secondViewController.categoryName = categoryName
-        secondViewController.wordSearch = wordSearch
-        secondViewController.markerArticles = markerArticles
-        secondViewController.sourcesName = sourcesName
-        secondViewController.userNames = userNames
-        
-        show(secondViewController, sender: nil)
+//        secondViewController.name = name
+//        secondViewController.typeOfFunc = typeOfFunc
+//        secondViewController.searchByCountry = searchByCountry
+//        secondViewController.categoryName = categoryName
+//        secondViewController.wordSearch = wordSearch
+//        secondViewController.markerArticles = markerArticles
+//        secondViewController.sourcesName = sourcesName
+//        secondViewController.userNames = userNames
+        navigationController?.popViewController(animated: true)
+
+     //   show(secondViewController, sender: nil)
         
     }
 }
@@ -62,7 +63,7 @@ extension CatogoryViewController: UITableViewDelegate {
             tableView.cellForRow(at: indexPath as IndexPath)?.accessoryType = .checkmark
             checkIndex += 1
             numberIndex = indexPath
-            categoryName = categoryArray[indexPath.row]
+            nextView.categoryName = categoryArray[indexPath.row]
         }
         
     }
@@ -79,7 +80,7 @@ extension CatogoryViewController: UITableViewDataSource {
         if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         }
-        if categoryArray[indexPath.row] == categoryName {
+        if categoryArray[indexPath.row] == nextView.categoryName {
             cell!.accessoryType = UITableViewCell.AccessoryType.checkmark
             numberIndex = indexPath
         }

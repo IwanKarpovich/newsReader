@@ -35,7 +35,7 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             
                             guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-                            secondViewController.userNames = userNames
+                            nextView.userNames = userNames
                             
                             
                             self.show(secondViewController, sender: nil)
@@ -84,7 +84,7 @@ class AuthViewController: UIViewController, LoginButtonDelegate {
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 
                                 guard let secondViewController = storyboard.instantiateViewController(identifier: "newsMenu") as? NewsViewController else { return }
-                                secondViewController.userNames = userNames
+                                nextView.userNames = userNames
                                 
                                 
                                 self.show(secondViewController, sender: nil)
